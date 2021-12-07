@@ -1,4 +1,5 @@
-﻿using Sam.FileTableFramework.Context;
+﻿using System;
+using Sam.FileTableFramework.Context;
 using Sam.FileTableFramework.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace Sam.FileTableFramework.Extentions
         {
             var masterConnectionString = new SqlConnectionStringBuilder(connectionString);
             var databaseName = masterConnectionString.InitialCatalog;
-            var pathDatabase = "C://server";
+            var pathDatabase = "C:\\server44";
 
             masterConnectionString.InitialCatalog = "master";
 
@@ -30,9 +31,9 @@ LOG ON
 WITH FILESTREAM (NON_TRANSACTED_ACCESS=FULL,DIRECTORY_NAME=N'{databaseName}')
 ");
                 }
-                catch
+                catch (Exception e)
                 {
-                    // ignored
+                    Console.WriteLine(e);
                 }
 
             }

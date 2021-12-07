@@ -2,6 +2,7 @@
 using Sam.FileTableFramework.Dtos;
 using Sam.FileTableFramework.Entities;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -59,7 +60,18 @@ namespace Sam.FileTableFramework.Data
         {
             try
             {
-                return model.FileName;
+                using (var connection = new SqlConnection(ConnectionString))
+                {
+                    connection.Open();
+                    var sql = $"INSERT INTO {nameof(TableName)} ([name],[file_stream]) VALUES ('{model.FileName}',@fs)";
+
+                    var dParams = new DynamicParameters();
+                    dParams.Add("@fs", model.Stream, DbType.Binary);
+
+                    await connection.ExecuteAsync(sql, dParams);
+
+                    return model.FileName;
+                }
             }
             catch
             {
