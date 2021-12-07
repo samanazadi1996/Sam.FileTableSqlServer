@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Sam.FileTableFramework.Extentions
 {
-    public static class FileTableExtentions
+    public static class ServiceCollocationExtentions
     {
         public static IServiceCollection AddFileTableDBContext<TData>(this IServiceCollection services, Action<DatabaseOptions> configureOptions) where TData : FileTableDBContext, new()
         {
@@ -15,11 +15,11 @@ namespace Sam.FileTableFramework.Extentions
             configureOptions(options);
 
             TData instance = new TData();
-            instance.UseSqlServer(options);
+            instance.UseSqlServer(options.ConnectionString);
 
             foreach (var item in instance.GetType().GetProperties().Where(p => p.PropertyType.FullName.Equals(typeof(Repository).FullName)))
             {
-                instance.GetType().GetProperty(item.Name).SetValue(instance, new Repository(item.Name, options));
+                instance.GetType().GetProperty(item.Name).SetValue(instance, new Repository(item.Name, options.ConnectionString));
             }
 
             services.AddSingleton(instance);

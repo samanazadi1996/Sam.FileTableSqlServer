@@ -2,20 +2,20 @@
 using System;
 using System.IO;
 
-namespace Sam.FileTableFramework.Dtos
+namespace Sam.FileTableFramework.Data.Dto
 {
-    public class CreateFileTableDto
+    public class CreateFileEntityDto
     {
         public string FileName { get; private set; }
         public Stream Stream { get; private set; }
 
-        public CreateFileTableDto(IFormFile file, bool keepFileName = false)
+        public CreateFileEntityDto(IFormFile file, bool keepFileName = false)
         {
             FileName = keepFileName ? file.FileName : Guid.NewGuid() + file.FileName[file.FileName.LastIndexOf(".", StringComparison.Ordinal)..];
             Stream = file.OpenReadStream();
         }
 
-        public CreateFileTableDto(Stream stream, string fileName)
+        public CreateFileEntityDto(Stream stream, string fileName)
         {
             FileName = fileName;
             Stream = stream;

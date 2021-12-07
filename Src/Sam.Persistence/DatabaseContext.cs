@@ -10,10 +10,4 @@ namespace Sam.Persistence
         public Repository Table1 { get; set; }
         public Repository Table2 { get; set; }
     }
-
-    public class DatabaseContext2: FileTableDBContext
-    {
-        public Repository Table3 { get; set; }
-        public Repository Table4 { get; set; }
-    }
 }

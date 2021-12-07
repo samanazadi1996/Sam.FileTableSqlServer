@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Sam.FileTableFramework.Data.Dto;
 using Sam.Persistence;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace Sam.EndPoint.Controllers
@@ -18,6 +20,14 @@ namespace Sam.EndPoint.Controllers
             this.databaseContext = databaseContext;
         }
 
+        [HttpGet("GetPaged/{page}/{pageCount}")]
+        public async Task<PagedListFileEntityDto> GetPaged(int page, int pageCount)
+        {
+            var result = await databaseContext.Table1.GetPagedListAsync(page, pageCount);
+
+            return result;
+        }
+
         [HttpGet("GetAll")]
         public async Task<IEnumerable<string>> GetAll()
         {
@@ -31,13 +41,13 @@ namespace Sam.EndPoint.Controllers
         {
             var result = await databaseContext.Table1.FindByNameAsync(name);
 
-            return File(result.file_stream, System.Net.Mime.MediaTypeNames.Application.Octet, result.name);
+            return File(result.file_stream, MediaTypeNames.Application.Octet, result.name);
         }
 
         [HttpPost("Upload")]
         public async Task<string> Upload(IFormFile file)
         {
-            return await databaseContext.Table1.CreateAsync(new FileTableFramework.Dtos.CreateFileTableDto(file));
+            return await databaseContext.Table1.CreateAsync(new CreateFileEntityDto(file));
         }
 
     }

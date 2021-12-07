@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using Sam.FileTableFramework.Dtos;
+using Sam.FileTableFramework.Data.Dto;
 using Sam.FileTableFramework.Entities;
 using Sam.FileTableFramework.Extentions;
 using System.Collections.Generic;
@@ -12,25 +12,25 @@ namespace Sam.FileTableFramework.Data
     public class Repository
     {
         private string TableName { get; set; }
-        private DatabaseOptions DatabaseOptions { get; set; }
+        private string ConnectionString { get; set; }
 
-        public Repository(string tableName, DatabaseOptions databaseOptions)
+        public Repository(string tableName, string connectionString)
         {
             TableName = tableName;
-            DatabaseOptions = databaseOptions;
+            ConnectionString = connectionString;
         }
 
         public async Task<FileEntity> FindByNameAsync(string fileName)
         {
             try
             {
-                string sql = $"SELECT TOP 1 * FROM [{TableName}] WHERE [name] = '{fileName}'";
+                string sqlQuery = $"SELECT TOP 1 * FROM [{TableName}] WHERE [name] = '{fileName}'";
 
-                using (var connection = new SqlConnection(DatabaseOptions.ConnectionString))
+                using (var connection = new SqlConnection(ConnectionString))
                 {
                     await connection.OpenAsync();
 
-                    return await connection.QueryFirstAsync<FileEntity>(sql);
+                    return await connection.QueryFirstAsync<FileEntity>(sqlQuery);
                 }
             }
             catch
@@ -39,17 +39,17 @@ namespace Sam.FileTableFramework.Data
             }
         }
 
-        public async Task<IEnumerable<FileEntity>> GetAllAsync()
+        public async Task<IEnumerable<FileEntityDto>> GetAllAsync()
         {
             try
             {
-                string sql = $"SELECT * FROM [{TableName}]";
+                string sqlQuery = $"SELECT * FROM [{TableName}]";
 
-                using (var connection = new SqlConnection(DatabaseOptions.ConnectionString))
+                using (var connection = new SqlConnection(ConnectionString))
                 {
                     await connection.OpenAsync();
 
-                    return await connection.QueryAsync<FileEntity>(sql);
+                    return await connection.QueryAsync<FileEntityDto>(sqlQuery);
                 }
             }
             catch
@@ -57,19 +57,43 @@ namespace Sam.FileTableFramework.Data
                 return null;
             }
         }
-        public async Task<string> CreateAsync(CreateFileTableDto model)
+        public async Task<PagedListFileEntityDto> GetPagedListAsync(int page, int pageCount)
         {
             try
             {
-                using (var connection = new SqlConnection(DatabaseOptions.ConnectionString))
+                var skip = (page - 1) * pageCount;
+
+                string pagedQuery = $"SELECT *  FROM [{TableName}] ORDER BY name OFFSET {skip} ROWS FETCH NEXT {pageCount} ROWS ONLY";
+                string countQuery = $"SELECT COUNT(*) FROM [{TableName}]";
+
+                using (var connection = new SqlConnection(ConnectionString))
+                {
+                    await connection.OpenAsync();
+
+                    var list = await connection.QueryAsync<FileEntityDto>(pagedQuery);
+                    var totalItem = await connection.QueryFirstAsync<int>(countQuery);
+
+                    return new PagedListFileEntityDto(list, page, pageCount, totalItem);
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        public async Task<string> CreateAsync(CreateFileEntityDto model)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(ConnectionString))
                 {
                     connection.Open();
-                    var sql = $"INSERT INTO {TableName} ([name],[file_stream]) VALUES ('{model.FileName}',@fs)";
+                    var sqlQuery = $"INSERT INTO {TableName} ([name],[file_stream]) VALUES ('{model.FileName}',@fs)";
 
                     var dParams = new DynamicParameters();
                     dParams.Add("@fs", model.Stream, DbType.Binary);
 
-                    await connection.ExecuteAsync(sql, dParams);
+                    await connection.ExecuteAsync(sqlQuery, dParams);
 
                     return model.FileName;
                 }
@@ -84,13 +108,13 @@ namespace Sam.FileTableFramework.Data
         {
             try
             {
-                string sql = $"DELETE [{TableName}] WHERE [name] = '{fileName}'";
+                string sqlQuery = $"DELETE [{TableName}] WHERE [name] = '{fileName}'";
 
-                using (var connection = new SqlConnection(DatabaseOptions.ConnectionString))
+                using (var connection = new SqlConnection(ConnectionString))
                 {
                     await connection.OpenAsync();
 
-                    return await connection.ExecuteAsync(sql);
+                    return await connection.ExecuteAsync(sqlQuery);
                 }
             }
             catch
