@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Sam.FileTableFramework.Dtos;
 using Sam.FileTableFramework.Entities;
+using Sam.FileTableFramework.Extentions;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -11,12 +12,12 @@ namespace Sam.FileTableFramework.Data
     public class Repository
     {
         private string TableName { get; set; }
-        private string ConnectionString { get; set; }
+        private DatabaseOptions DatabaseOptions { get; set; }
 
-        public Repository(string tableName, string connectionString)
+        public Repository(string tableName, DatabaseOptions databaseOptions)
         {
             TableName = tableName;
-            ConnectionString = connectionString;
+            DatabaseOptions = databaseOptions;
         }
 
         public async Task<FileEntity> FindByNameAsync(string fileName)
@@ -25,7 +26,7 @@ namespace Sam.FileTableFramework.Data
             {
                 string sql = $"SELECT TOP 1 * FROM [{TableName}] WHERE [name] = '{fileName}'";
 
-                using (var connection = new SqlConnection(ConnectionString))
+                using (var connection = new SqlConnection(DatabaseOptions.ConnectionString))
                 {
                     await connection.OpenAsync();
 
@@ -44,7 +45,7 @@ namespace Sam.FileTableFramework.Data
             {
                 string sql = $"SELECT * FROM [{TableName}]";
 
-                using (var connection = new SqlConnection(ConnectionString))
+                using (var connection = new SqlConnection(DatabaseOptions.ConnectionString))
                 {
                     await connection.OpenAsync();
 
@@ -60,10 +61,10 @@ namespace Sam.FileTableFramework.Data
         {
             try
             {
-                using (var connection = new SqlConnection(ConnectionString))
+                using (var connection = new SqlConnection(DatabaseOptions.ConnectionString))
                 {
                     connection.Open();
-                    var sql = $"INSERT INTO {nameof(TableName)} ([name],[file_stream]) VALUES ('{model.FileName}',@fs)";
+                    var sql = $"INSERT INTO {TableName} ([name],[file_stream]) VALUES ('{model.FileName}',@fs)";
 
                     var dParams = new DynamicParameters();
                     dParams.Add("@fs", model.Stream, DbType.Binary);
@@ -85,7 +86,7 @@ namespace Sam.FileTableFramework.Data
             {
                 string sql = $"DELETE [{TableName}] WHERE [name] = '{fileName}'";
 
-                using (var connection = new SqlConnection(ConnectionString))
+                using (var connection = new SqlConnection(DatabaseOptions.ConnectionString))
                 {
                     await connection.OpenAsync();
 

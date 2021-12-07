@@ -13,8 +13,6 @@ namespace Sam.FileTableFramework.Extentions
         {
             var masterConnectionString = new SqlConnectionStringBuilder(connectionString);
             var databaseName = masterConnectionString.InitialCatalog;
-            var pathDatabase = "C:\\server44";
-
             masterConnectionString.InitialCatalog = "master";
 
             using (var connection = new SqlConnection(masterConnectionString.ConnectionString))
@@ -22,18 +20,15 @@ namespace Sam.FileTableFramework.Extentions
                 connection.Open();
                 try
                 {
-                    connection.Execute($@"CREATE DATABASE {databaseName}	
-ON PRIMARY
-(NAME=F1,FILENAME='{pathDatabase}\{databaseName}.MDF'),
-FILEGROUP G1 CONTAINS FILESTREAM(NAME=Str,FILENAME='{pathDatabase}\Fs')
-LOG ON
-(NAME=F2,FILENAME='{pathDatabase}\{databaseName}Log.MDF')
-WITH FILESTREAM (NON_TRANSACTED_ACCESS=FULL,DIRECTORY_NAME=N'{databaseName}')
-");
+                    var pathDatabase = connection.QueryFirst<string>("SELECT SERVERPROPERTY('INSTANCEDEFAULTDATAPATH')");
+
+                    if (!pathDatabase.EndsWith("\\")) pathDatabase += "\\";
+
+                    connection.Execute($@"CREATE DATABASE {databaseName} ON PRIMARY (NAME=F1,FILENAME='{pathDatabase}{databaseName}.MDF'),FILEGROUP G1 CONTAINS FILESTREAM(NAME=Str,FILENAME='{pathDatabase}{databaseName}') LOG ON (NAME=F2,FILENAME='{pathDatabase}{databaseName}Log.MDF') WITH FILESTREAM (NON_TRANSACTED_ACCESS=FULL,DIRECTORY_NAME=N'{databaseName}') ");
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    // ignored
                 }
 
             }

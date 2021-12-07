@@ -1,20 +1,18 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Sam.FileTableFramework.Extentions;
-using System;
+﻿using Sam.FileTableFramework.Extentions;
 
 namespace Sam.FileTableFramework.Context
 {
     public abstract class FileTableDBContext
     {
-        private string ConnectionString { get; set; }
-        public void UseSqlServer(string connectionString)
+        private DatabaseOptions DatabaseOptions { get; set; }
+        public void UseSqlServer(DatabaseOptions databaseOptions)
         {
-            ConnectionString = connectionString;
+            DatabaseOptions = databaseOptions;
         }
         public void Migrate()
-        {
-            this.GenerateDataBase(ConnectionString);
-            this.GenerateTables(ConnectionString);
+         {
+            this.GenerateDataBase(DatabaseOptions.ConnectionString);
+            this.GenerateTables(DatabaseOptions.ConnectionString);
         }
     }
 }

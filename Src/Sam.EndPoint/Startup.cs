@@ -27,7 +27,12 @@ namespace Sam.EndPoint
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddFileTableDBContext<DatabaseContext>("data source=.;initial catalog=samsamdb;persist security info=True;user id=sa;password=sa123;MultipleActiveResultSets=True");
+            services.AddFileTableDBContext<DatabaseContext>(o =>
+                o.ConnectionString = Configuration.GetConnectionString("DB_1"));
+
+            services.AddFileTableDBContext<DatabaseContext2>(o =>
+                o.ConnectionString = Configuration.GetConnectionString("DB_2"));
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -36,7 +41,7 @@ namespace Sam.EndPoint
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DatabaseContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DatabaseContext context, DatabaseContext2 context2)
         {
             if (env.IsDevelopment())
             {
@@ -56,6 +61,7 @@ namespace Sam.EndPoint
                 endpoints.MapControllers();
             });
             context.Migrate();
+            context2.Migrate();
         }
     }
 }
