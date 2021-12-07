@@ -11,7 +11,7 @@ namespace Sam.FileTableFramework.Dtos
 
         public CreateFileTableDto(IFormFile file, bool keepFileName = false)
         {
-            FileName = keepFileName ? file.FileName : Guid.NewGuid() + file.FileName[file.FileName.LastIndexOf(".")..];
+            FileName = keepFileName ? file.FileName : Guid.NewGuid() + file.FileName[file.FileName.LastIndexOf(".", StringComparison.Ordinal)..];
             Stream = file.OpenReadStream();
         }
 
