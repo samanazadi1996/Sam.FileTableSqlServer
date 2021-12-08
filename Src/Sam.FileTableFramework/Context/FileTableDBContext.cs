@@ -4,14 +4,14 @@ namespace Sam.FileTableFramework.Context
 {
     public abstract class FileTableDBContext
     {
-        private string ConnectionString { get; set; }
+        internal string ConnectionString { get; private set; }
         public void UseSqlServer(string connectionString)
         {
             ConnectionString = connectionString;
         }
         public void Migrate()
         {
-            this.MigrateDatabase(ConnectionString);
+            this.MigrateDatabase();
         }
     }
 }

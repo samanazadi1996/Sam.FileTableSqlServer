@@ -23,23 +23,22 @@ namespace Sam.EndPoint.Controllers
         [HttpGet("GetPaged/{page}/{pageCount}")]
         public async Task<PagedListFileEntityDto> GetPaged(int page, int pageCount)
         {
-            var result = await databaseContext.Table1.GetPagedListAsync(page, pageCount);
-
-            return result;
+            return await databaseContext.Table1.GetPagedListAsync(page, pageCount);
         }
 
         [HttpGet("GetAll")]
-        public async Task<IEnumerable<string>> GetAll()
+        public async Task<IEnumerable<FileEntityDto>> GetAll()
         {
-            var result = await databaseContext.Table1.GetAllAsync();
-
-            return result.Select(p => p.name);
+            return await databaseContext.Table1.GetAllAsync();
         }
 
         [HttpGet("Download/{name}")]
         public async Task<IActionResult> Download(string name)
         {
             var result = await databaseContext.Table1.FindByNameAsync(name);
+
+            if (result is null)
+                return NotFound(name);
 
             return File(result.file_stream, MediaTypeNames.Application.Octet, result.name);
         }
