@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using Sam.FileTableFramework.Data.Dto;
 using Sam.FileTableFramework.Entities;
-using Sam.FileTableFramework.Extentions;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -22,102 +21,63 @@ namespace Sam.FileTableFramework.Data
 
         public async Task<FileEntity> FindByNameAsync(string fileName)
         {
-            try
+            using (var connection = new SqlConnection(ConnectionString))
             {
+                await connection.OpenAsync();
+
                 string sqlQuery = $"SELECT TOP 1 * FROM [{TableName}] WHERE [name] = '{fileName}'";
-
-                using (var connection = new SqlConnection(ConnectionString))
-                {
-                    await connection.OpenAsync();
-
-                    return await connection.QueryFirstAsync<FileEntity>(sqlQuery);
-                }
-            }
-            catch
-            {
-                return null;
+                return await connection.QueryFirstAsync<FileEntity>(sqlQuery);
             }
         }
         public async Task<IEnumerable<FileEntityDto>> GetAllAsync()
         {
-            try
+            using (var connection = new SqlConnection(ConnectionString))
             {
+                await connection.OpenAsync();
+
                 string sqlQuery = $"SELECT * FROM [{TableName}]";
-
-                using (var connection = new SqlConnection(ConnectionString))
-                {
-                    await connection.OpenAsync();
-
-                    return await connection.QueryAsync<FileEntityDto>(sqlQuery);
-                }
-            }
-            catch
-            {
-                return null;
+                return await connection.QueryAsync<FileEntityDto>(sqlQuery);
             }
         }
         public async Task<PagedListFileEntityDto> GetPagedListAsync(int page, int pageCount)
         {
-            try
+            using (var connection = new SqlConnection(ConnectionString))
             {
+                await connection.OpenAsync();
+
                 var skip = (page - 1) * pageCount;
-
                 string pagedQuery = $"SELECT *  FROM [{TableName}] ORDER BY name OFFSET {skip} ROWS FETCH NEXT {pageCount} ROWS ONLY";
+                var list = await connection.QueryAsync<FileEntityDto>(pagedQuery);
+
                 string countQuery = $"SELECT COUNT(*) FROM [{TableName}]";
+                var totalItem = await connection.QueryFirstAsync<int>(countQuery);
 
-                using (var connection = new SqlConnection(ConnectionString))
-                {
-                    await connection.OpenAsync();
-
-                    var list = await connection.QueryAsync<FileEntityDto>(pagedQuery);
-                    var totalItem = await connection.QueryFirstAsync<int>(countQuery);
-
-                    return new PagedListFileEntityDto(list, page, pageCount, totalItem);
-                }
-            }
-            catch
-            {
-                return null;
+                return new PagedListFileEntityDto(list, page, pageCount, totalItem);
             }
         }
         public async Task<string> CreateAsync(CreateFileEntityDto model)
         {
-            try
+            using (var connection = new SqlConnection(ConnectionString))
             {
-                using (var connection = new SqlConnection(ConnectionString))
-                {
-                    connection.Open();
-                    var sqlQuery = $"INSERT INTO {TableName} ([name],[file_stream]) VALUES ('{model.FileName}',@fs)";
+                connection.Open();
 
-                    var dParams = new DynamicParameters();
-                    dParams.Add("@fs", model.Stream, DbType.Binary);
+                var dParams = new DynamicParameters();
+                dParams.Add("@fs", model.Stream, DbType.Binary);
 
-                    await connection.ExecuteAsync(sqlQuery, dParams);
+                var sqlQuery = $"INSERT INTO {TableName} ([name],[file_stream]) VALUES ('{model.FileName}',@fs)";
+                await connection.ExecuteAsync(sqlQuery, dParams);
 
-                    return model.FileName;
-                }
-            }
-            catch
-            {
-                return string.Empty;
+                return model.FileName;
             }
         }
         public async Task<int> RemoveByNameAsync(string fileName)
         {
-            try
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 string sqlQuery = $"DELETE [{TableName}] WHERE [name] = '{fileName}'";
+                await connection.OpenAsync();
 
-                using (var connection = new SqlConnection(ConnectionString))
-                {
-                    await connection.OpenAsync();
-
-                    return await connection.ExecuteAsync(sqlQuery);
-                }
-            }
-            catch
-            {
-                return 0;
+                return await connection.ExecuteAsync(sqlQuery);
             }
         }
     }
