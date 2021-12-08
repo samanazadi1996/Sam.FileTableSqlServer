@@ -10,9 +10,8 @@ namespace Sam.FileTableFramework.Context
             ConnectionString = connectionString;
         }
         public void Migrate()
-         {
-            this.GenerateDataBase(ConnectionString);
-            this.GenerateTables(ConnectionString);
+        {
+            this.MigrateDatabase(ConnectionString);
         }
     }
 }

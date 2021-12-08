@@ -14,7 +14,7 @@ namespace Sam.FileTableFramework.Data
         private string TableName { get; set; }
         private string ConnectionString { get; set; }
 
-        public Repository(string tableName, string connectionString)
+        internal Repository(string tableName, string connectionString)
         {
             TableName = tableName;
             ConnectionString = connectionString;
@@ -38,7 +38,6 @@ namespace Sam.FileTableFramework.Data
                 return null;
             }
         }
-
         public async Task<IEnumerable<FileEntityDto>> GetAllAsync()
         {
             try
@@ -103,7 +102,6 @@ namespace Sam.FileTableFramework.Data
                 return string.Empty;
             }
         }
-
         public async Task<int> RemoveByNameAsync(string fileName)
         {
             try

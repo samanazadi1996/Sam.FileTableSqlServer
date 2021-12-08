@@ -9,7 +9,13 @@ namespace Sam.FileTableFramework.Extentions
 {
     public static class MigrationBuilderExtensions
     {
-        public static void GenerateDataBase(this FileTableDBContext context, string connectionString)
+
+        internal static void MigrateDatabase(this FileTableDBContext context, string connectionString)
+        {
+            context.GenerateDataBase(connectionString);
+            context.GenerateTables(connectionString);
+        }
+        private static void GenerateDataBase(this FileTableDBContext context, string connectionString)
         {
             var masterConnectionString = new SqlConnectionStringBuilder(connectionString);
             var databaseName = masterConnectionString.InitialCatalog;
@@ -34,7 +40,7 @@ namespace Sam.FileTableFramework.Extentions
             }
         }
 
-        public static void GenerateTables(this FileTableDBContext context, string connectionString)
+        private static void GenerateTables(this FileTableDBContext context, string connectionString)
         {
             using (var connection = new SqlConnection(connectionString))
             {
@@ -52,5 +58,8 @@ namespace Sam.FileTableFramework.Extentions
                 }
             }
         }
+        //private static void DropUnUsedTables(this FileTableDBContext context, string connectionString)
+        //{
+        //}
     }
 }
