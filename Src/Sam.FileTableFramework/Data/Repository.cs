@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Sam.FileTableFramework.Data
 {
-    public class Repository
+    internal class Repository : IRepository
     {
         private string TableName { get; set; }
         private string ConnectionString { get; set; }
@@ -18,7 +18,7 @@ namespace Sam.FileTableFramework.Data
             TableName = tableName;
             ConnectionString = connectionString;
         }
-
+        
         public async Task<FileEntity> FindByNameAsync(string fileName)
         {
             using (var connection = new SqlConnection(ConnectionString))

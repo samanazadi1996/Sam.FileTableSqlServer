@@ -7,8 +7,8 @@ namespace Sam.Persistence
 {
     public class DatabaseContext: FileTableDBContext
     {
-        public Repository Table1 { get; set; }
-        public Repository Table2 { get; set; }
-        public Repository Table3 { get; set; }
+        public IRepository Table1 { get; set; }
+        public IRepository Table2 { get; set; }
+        public IRepository Table3 { get; set; }
     }
 }

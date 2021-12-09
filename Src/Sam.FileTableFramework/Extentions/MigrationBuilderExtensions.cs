@@ -38,7 +38,7 @@ namespace Sam.FileTableFramework.Extentions
             using (var connection = new SqlConnection(context.ConnectionString))
             {
                 connection.Open();
-                foreach (var item in context.GetType().GetProperties().Where(p => p.PropertyType.FullName.Equals(typeof(Repository).FullName)))
+                foreach (var item in context.GetType().GetProperties().Where(p => p.PropertyType.FullName.Equals(typeof(IRepository).FullName)))
                 {
                     var existTable = connection.QueryFirst<int>($"SELECT COUNT(*) FROM SYS.TABLES WHERE [name] = '{item.Name}' AND [is_filetable] = 1") > 0;
                     if (!existTable)
