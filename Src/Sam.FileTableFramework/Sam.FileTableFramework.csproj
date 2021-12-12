@@ -3,7 +3,24 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
+    <ApplicationIcon>315887_document_sql_file_icon.ico</ApplicationIcon>
+    <Company>Aaman Azadi</Company>
+    <PackageProjectUrl>https://github.com/samanazadi1996/Sam.FileTableSqlServer</PackageProjectUrl>
+    <PackageIcon>315887_document_sql_file_icon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/samanazadi1996/Sam.FileTableSqlServer</RepositoryUrl>
+    <RepositoryType>github</RepositoryType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="315887_document_sql_file_icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\Downloads\315887_document_sql_file_icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />

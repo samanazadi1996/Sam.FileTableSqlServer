@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace Sam.EndPoint.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
+    [ApiController, Route("[controller]")]
     public class FileController : ControllerBase
     {
         private readonly DatabaseContext databaseContext;
@@ -20,15 +19,15 @@ namespace Sam.EndPoint.Controllers
         }
 
         [HttpGet("GetPaged/{page}/{pageCount}")]
-        public async Task<PagedListFileEntityDto> GetPaged(int page, int pageCount)
+        public async Task<IActionResult> GetPaged(int page, int pageCount)
         {
-            return await databaseContext.Table1.GetPagedListAsync(page, pageCount);
+            return Ok(await databaseContext.Table1.GetPagedListAsync(page, pageCount));
         }
 
         [HttpGet("GetAll")]
-        public async Task<IEnumerable<FileEntityDto>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return await databaseContext.Table1.GetAllAsync();
+            return Ok(await databaseContext.Table1.GetAllAsync());
         }
 
         [HttpGet("Download/{name}")]
@@ -43,9 +42,9 @@ namespace Sam.EndPoint.Controllers
         }
 
         [HttpPost("Upload")]
-        public async Task<string> Upload(IFormFile file)
+        public async Task<IActionResult> Upload(IFormFile file)
         {
-            return await databaseContext.Table1.CreateAsync(new CreateFileEntityDto(file));
+            return Ok(await databaseContext.Table1.CreateAsync(new CreateFileEntityDto(file)));
         }
 
     }
