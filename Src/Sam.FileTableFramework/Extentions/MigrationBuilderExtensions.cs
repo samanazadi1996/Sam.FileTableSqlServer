@@ -28,7 +28,7 @@ namespace Sam.FileTableFramework.Extentions
                 {
                     var pathDatabase = connection.QueryFirst<string>("SELECT SERVERPROPERTY('INSTANCEDEFAULTDATAPATH')");
                     if (!pathDatabase.EndsWith("\\")) pathDatabase += "\\";
-                    connection.Execute($@"CREATE DATABASE {databaseName} ON PRIMARY (NAME=F1,FILENAME='{pathDatabase}{databaseName}.MDF'),FILEGROUP G1 CONTAINS FILESTREAM(NAME=Str,FILENAME='{pathDatabase}{databaseName}') LOG ON (NAME=F2,FILENAME='{pathDatabase}{databaseName}Log.MDF') WITH FILESTREAM (NON_TRANSACTED_ACCESS=FULL,DIRECTORY_NAME=N'{databaseName}') ");
+                    connection.Execute($"CREATE DATABASE {databaseName} ON PRIMARY (NAME=F1,FILENAME='{pathDatabase}{databaseName}.MDF'),FILEGROUP G1 CONTAINS FILESTREAM(NAME=Str,FILENAME='{pathDatabase}{databaseName}') LOG ON (NAME=F2,FILENAME='{pathDatabase}{databaseName}Log.MDF') WITH FILESTREAM (NON_TRANSACTED_ACCESS=FULL,DIRECTORY_NAME=N'{databaseName}') ");
                 }
             }
         }

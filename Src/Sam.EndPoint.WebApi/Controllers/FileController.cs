@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
 
-namespace Sam.EndPoint.Controllers
+namespace Sam.EndPoint.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
