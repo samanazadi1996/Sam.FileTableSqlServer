@@ -1,6 +1,5 @@
 ﻿using Sam.Persistence;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Sam.EndPoint.ConsoleApp
@@ -14,9 +13,9 @@ namespace Sam.EndPoint.ConsoleApp
             db.UseSqlServer(connectionStrings);
             db.Migrate();
 
-            var result = await db.Table1.GetAllAsync();
+            var result = await db.Table1.Count();
 
-            Console.WriteLine($"Count Files in Table1 : {result.Count()}");
+            Console.WriteLine($"Count Files in Table1 : {result}");
             Console.ReadKey();
         }
     }
