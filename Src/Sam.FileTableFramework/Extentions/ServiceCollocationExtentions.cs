@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Sam.FileTableFramework.Context;
-using Sam.FileTableFramework.Data;
 using System;
-using System.Linq;
 
 namespace Sam.FileTableFramework.Extentions
 {

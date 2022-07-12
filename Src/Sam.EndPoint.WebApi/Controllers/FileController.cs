@@ -29,6 +29,11 @@ namespace Sam.EndPoint.WebApi.Controllers
         {
             return Ok(await databaseContext.Table1.GetAllAsync());
         }
+        [HttpGet("Count")]
+        public async Task<IActionResult> Count()
+        {
+            return Ok(await databaseContext.Table1.Count());
+        }
 
         [HttpGet("Download/{name}")]
         public async Task<IActionResult> Download(string name)
@@ -45,6 +50,12 @@ namespace Sam.EndPoint.WebApi.Controllers
         public async Task<IActionResult> Upload(IFormFile file)
         {
             return Ok(await databaseContext.Table1.CreateAsync(new CreateFileEntityDto(file)));
+        }
+
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> Delete(string name)
+        {
+            return Ok(await databaseContext.Table1.RemoveByNameAsync(name));
         }
 
     }

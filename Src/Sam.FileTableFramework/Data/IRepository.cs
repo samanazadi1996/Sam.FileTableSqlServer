@@ -12,5 +12,6 @@ namespace Sam.FileTableFramework.Data
         Task<IEnumerable<FileEntityDto>> GetAllAsync();
         Task<PagedListFileEntityDto> GetPagedListAsync(int page, int pageCount);
         Task<int> RemoveByNameAsync(string fileName);
+        Task<int> Count();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Sam.FileTableFramework.Data.Dto;
 using Sam.FileTableFramework.Entities;
+using Sam.FileTableFramework.Extentions.Utilities;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -18,14 +19,15 @@ namespace Sam.FileTableFramework.Data
             TableName = tableName;
             ConnectionString = connectionString;
         }
-        
+
         public async Task<FileEntity> FindByNameAsync(string fileName)
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
                 await connection.OpenAsync();
 
-                string sqlQuery = $"SELECT TOP 1 * FROM [{TableName}] WHERE [name] = '{fileName}'";
+                string sqlQuery = SqlQueriesExtention.RepositoryQueries.Find(TableName, fileName);
+
                 return await connection.QueryFirstAsync<FileEntity>(sqlQuery);
             }
         }
@@ -35,7 +37,7 @@ namespace Sam.FileTableFramework.Data
             {
                 await connection.OpenAsync();
 
-                string sqlQuery = $"SELECT * FROM [{TableName}]";
+                string sqlQuery = SqlQueriesExtention.RepositoryQueries.Select(TableName);
                 return await connection.QueryAsync<FileEntityDto>(sqlQuery);
             }
         }
@@ -46,10 +48,10 @@ namespace Sam.FileTableFramework.Data
                 await connection.OpenAsync();
 
                 var skip = (page - 1) * pageCount;
-                string pagedQuery = $"SELECT *  FROM [{TableName}] ORDER BY name OFFSET {skip} ROWS FETCH NEXT {pageCount} ROWS ONLY";
+                string pagedQuery = SqlQueriesExtention.RepositoryQueries.Select(TableName, skip, pageCount);
                 var list = await connection.QueryAsync<FileEntityDto>(pagedQuery);
 
-                string countQuery = $"SELECT COUNT(*) FROM [{TableName}]";
+                string countQuery = SqlQueriesExtention.RepositoryQueries.Count(TableName);
                 var totalItem = await connection.QueryFirstAsync<int>(countQuery);
 
                 return new PagedListFileEntityDto(list, page, pageCount, totalItem);
@@ -64,7 +66,7 @@ namespace Sam.FileTableFramework.Data
                 var dParams = new DynamicParameters();
                 dParams.Add("@fs", model.Stream, DbType.Binary);
 
-                var sqlQuery = $"INSERT INTO {TableName} ([name],[file_stream]) VALUES ('{model.FileName}',@fs)";
+                var sqlQuery = SqlQueriesExtention.RepositoryQueries.Insert(TableName, model.FileName, "@fs");
                 await connection.ExecuteAsync(sqlQuery, dParams);
 
                 return model.FileName;
@@ -74,10 +76,22 @@ namespace Sam.FileTableFramework.Data
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
-                string sqlQuery = $"DELETE [{TableName}] WHERE [name] = '{fileName}'";
+                string sqlQuery = SqlQueriesExtention.RepositoryQueries.Delete(TableName, fileName);
                 await connection.OpenAsync();
 
                 return await connection.ExecuteAsync(sqlQuery);
+            }
+        }
+
+        public async Task<int> Count()
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                string countQuery = SqlQueriesExtention.RepositoryQueries.Count(TableName);
+                await connection.OpenAsync();
+
+                return await connection.QueryFirstAsync<int>(countQuery);
+
             }
         }
     }
