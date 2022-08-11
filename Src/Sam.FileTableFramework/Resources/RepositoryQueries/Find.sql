@@ -1,0 +1,1 @@
+﻿SELECT TOP 1 * FROM [{0}] WHERE [name] = '{1}'

@@ -1,0 +1,1 @@
+﻿INSERT INTO {0} ([name],[file_stream]) VALUES ('{1}',{2})

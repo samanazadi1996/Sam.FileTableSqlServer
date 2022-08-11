@@ -1,0 +1,1 @@
+﻿DELETE [{0}] WHERE [name] = '{1}'

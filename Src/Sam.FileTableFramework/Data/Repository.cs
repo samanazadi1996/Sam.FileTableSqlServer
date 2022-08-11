@@ -37,7 +37,7 @@ namespace Sam.FileTableFramework.Data
             {
                 await connection.OpenAsync();
 
-                string sqlQuery = SqlQueriesExtention.RepositoryQueries.Select(TableName);
+                string sqlQuery = SqlQueriesExtention.RepositoryQueries.SelectAll(TableName);
                 return await connection.QueryAsync<FileEntityDto>(sqlQuery);
             }
         }
@@ -48,7 +48,7 @@ namespace Sam.FileTableFramework.Data
                 await connection.OpenAsync();
 
                 var skip = (page - 1) * pageCount;
-                string pagedQuery = SqlQueriesExtention.RepositoryQueries.Select(TableName, skip, pageCount);
+                string pagedQuery = SqlQueriesExtention.RepositoryQueries.SelectPaging(TableName, skip, pageCount);
                 var list = await connection.QueryAsync<FileEntityDto>(pagedQuery);
 
                 string countQuery = SqlQueriesExtention.RepositoryQueries.Count(TableName);
