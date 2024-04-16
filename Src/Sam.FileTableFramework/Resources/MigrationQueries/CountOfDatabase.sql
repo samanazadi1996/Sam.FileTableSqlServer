@@ -1,1 +1,0 @@
-﻿SELECT COUNT(*) FROM SYS.DATABASES WHERE [name]='{0}'

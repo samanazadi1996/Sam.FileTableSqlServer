@@ -13,7 +13,7 @@ namespace Sam.FileTableFramework.Extentions
             configureOptions(options);
 
             TData instance = new TData();
-            instance.UseSqlServer(options.ConnectionString);
+            instance.UseSqlServer(options.ConnectionString!);
 
             services.AddSingleton(instance);
             return services;
@@ -22,7 +22,7 @@ namespace Sam.FileTableFramework.Extentions
     }
     public class DatabaseOptions
     {
-        public string ConnectionString { get; set; }
+        public string? ConnectionString { get; set; }
 
     }
 }

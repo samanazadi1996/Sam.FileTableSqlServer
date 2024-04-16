@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Sam.FileTableFramework.Data.Dto;
 using Sam.FileTableFramework.Entities;
 using Sam.FileTableFramework.Extentions.Utilities;
 using System.Collections.Generic;
@@ -7,14 +6,14 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
-namespace Sam.FileTableFramework.Data
+namespace Sam.FileTableFramework.Context
 {
-    internal class Repository : IRepository
+    public class FtDbSet
     {
         private string TableName { get; set; }
         private string ConnectionString { get; set; }
 
-        internal Repository(string tableName, string connectionString)
+        public FtDbSet(string tableName, string connectionString)
         {
             TableName = tableName;
             ConnectionString = connectionString;
@@ -82,7 +81,6 @@ namespace Sam.FileTableFramework.Data
                 return await connection.ExecuteAsync(sqlQuery);
             }
         }
-
         public async Task<int> Count()
         {
             using (var connection = new SqlConnection(ConnectionString))
@@ -95,4 +93,5 @@ namespace Sam.FileTableFramework.Data
             }
         }
     }
+
 }

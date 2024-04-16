@@ -1,12 +1,11 @@
-﻿using Sam.FileTableFramework.Data;
-using Sam.FileTableFramework.Extentions;
+﻿using Sam.FileTableFramework.Extentions;
 using System.Linq;
 
 namespace Sam.FileTableFramework.Context
 {
     public abstract class FileTableDBContext
     {
-        internal string ConnectionString { get; private set; }
+        internal string? ConnectionString { get; private set; }
         public void UseSqlServer(string connectionString)
         {
             ConnectionString = connectionString;
@@ -14,8 +13,8 @@ namespace Sam.FileTableFramework.Context
         }
         private void AddRepositories()
         {
-            foreach (var item in GetType().GetProperties().Where(p => p.PropertyType.FullName.Equals(typeof(IRepository).FullName)))
-                GetType().GetProperty(item.Name).SetValue(this, new Repository(item.Name, ConnectionString));
+            foreach (var item in GetType().GetProperties().Where(p => p.PropertyType.FullName.Equals(typeof(FtDbSet).FullName)))
+                GetType().GetProperty(item.Name).SetValue(this, new FtDbSet(item.Name, ConnectionString!));
         }
         public void Migrate()
         {

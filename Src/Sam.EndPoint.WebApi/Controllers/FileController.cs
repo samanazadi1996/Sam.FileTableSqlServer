@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Sam.FileTableFramework.Data.Dto;
+using Sam.FileTableFramework.Context;
 using Sam.Persistence;
-using System.Collections.Generic;
+using System.IO;
+using System;
 using System.Net.Mime;
 using System.Threading.Tasks;
 
@@ -49,7 +50,11 @@ namespace Sam.EndPoint.WebApi.Controllers
         [HttpPost("Upload")]
         public async Task<IActionResult> Upload(IFormFile file)
         {
-            return Ok(await databaseContext.Table1.CreateAsync(new CreateFileEntityDto(file)));
+            return Ok(await databaseContext.Table1.CreateAsync(new CreateFileEntityDto()
+            {
+                FileName =  Guid.NewGuid() + file.FileName[file.FileName.LastIndexOf(".", StringComparison.Ordinal)..],
+                Stream = file.OpenReadStream()
+            }));
         }
 
         [HttpDelete("Delete")]

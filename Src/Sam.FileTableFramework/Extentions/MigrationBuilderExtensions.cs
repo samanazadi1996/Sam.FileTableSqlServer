@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using Sam.FileTableFramework.Context;
-using Sam.FileTableFramework.Data;
 using Sam.FileTableFramework.Extentions.Utilities;
 using System.Data.SqlClient;
 using System.Linq;
@@ -11,7 +10,7 @@ namespace Sam.FileTableFramework.Extentions
     {
         internal static void MigrateDatabase(this FileTableDBContext context)
         {
-            GenerateDataBase(context.ConnectionString);
+            GenerateDataBase(context.ConnectionString!);
             GenerateTables(context);
         }
         private static void GenerateDataBase(string connectionString)
@@ -38,7 +37,7 @@ namespace Sam.FileTableFramework.Extentions
             using (var connection = new SqlConnection(context.ConnectionString))
             {
                 connection.Open();
-                foreach (var item in context.GetType().GetProperties().Where(p => p.PropertyType.FullName.Equals(typeof(IRepository).FullName)))
+                foreach (var item in context.GetType().GetProperties().Where(p => p.PropertyType.FullName.Equals(typeof(FtDbSet).FullName)))
                 {
                     var existTable = connection.QueryFirst<int>(SqlQueriesExtention.MigrationQueries.CountOfTable(item.Name)) > 0;
                     if (!existTable)
