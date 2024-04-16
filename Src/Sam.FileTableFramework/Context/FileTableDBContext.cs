@@ -16,9 +16,5 @@ namespace Sam.FileTableFramework.Context
             foreach (var item in GetType().GetProperties().Where(p => p.PropertyType.FullName.Equals(typeof(FtDbSet).FullName)))
                 GetType().GetProperty(item.Name).SetValue(this, new FtDbSet(item.Name, ConnectionString!));
         }
-        public void Migrate()
-        {
-            this.MigrateDatabase();
-        }
     }
 }

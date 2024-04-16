@@ -51,6 +51,7 @@ namespace Sam.EndPoint.WebApi
             {
                 endpoints.MapControllers();
             });
+
             context.Migrate();
         }
     }

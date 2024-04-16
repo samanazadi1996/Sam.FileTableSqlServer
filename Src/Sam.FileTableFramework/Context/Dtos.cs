@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Sam.FileTableFramework.Context
 {
-    public class CreateFileEntityDto
-    {
-        public string? FileName { get; set; }
-        public Stream? Stream { get; set; }
-    }
     public class FileEntityDto
     {
         public Guid stream_id { get; set; }

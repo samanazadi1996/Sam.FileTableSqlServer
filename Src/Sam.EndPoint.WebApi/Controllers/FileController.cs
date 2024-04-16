@@ -50,11 +50,9 @@ namespace Sam.EndPoint.WebApi.Controllers
         [HttpPost("Upload")]
         public async Task<IActionResult> Upload(IFormFile file)
         {
-            return Ok(await databaseContext.Table1.CreateAsync(new CreateFileEntityDto()
-            {
-                FileName =  Guid.NewGuid() + file.FileName[file.FileName.LastIndexOf(".", StringComparison.Ordinal)..],
-                Stream = file.OpenReadStream()
-            }));
+            var fileName = Guid.NewGuid() + file.FileName[file.FileName.LastIndexOf(".", StringComparison.Ordinal)..];
+            var stream = file.OpenReadStream();
+            return Ok(await databaseContext.Table1.CreateAsync(fileName, stream));
         }
 
         [HttpDelete("Delete")]

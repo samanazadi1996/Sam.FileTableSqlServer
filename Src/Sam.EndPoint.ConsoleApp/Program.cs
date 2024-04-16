@@ -1,4 +1,5 @@
-﻿using Sam.Persistence;
+﻿using Sam.FileTableFramework.Extentions;
+using Sam.Persistence;
 using System;
 using System.Threading.Tasks;
 

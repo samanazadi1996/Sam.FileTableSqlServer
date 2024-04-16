@@ -1,6 +1,4 @@
 ﻿using Sam.FileTableFramework.Context;
-using Sam.FileTableFramework.Entities;
-using System;
 
 namespace Sam.Persistence
 {
