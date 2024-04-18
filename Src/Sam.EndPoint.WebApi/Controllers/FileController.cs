@@ -30,6 +30,7 @@ namespace Sam.EndPoint.WebApi.Controllers
         {
             return Ok(await databaseContext.Table1.GetAllAsync());
         }
+
         [HttpGet("Count")]
         public async Task<IActionResult> Count()
         {
