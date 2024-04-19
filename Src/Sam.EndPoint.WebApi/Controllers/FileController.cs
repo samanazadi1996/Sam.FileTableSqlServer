@@ -1,23 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Sam.FileTableFramework.Context;
 using Sam.Persistence;
-using System.IO;
-using System;
 using System.Net.Mime;
-using System.Threading.Tasks;
 
 namespace Sam.EndPoint.WebApi.Controllers
 {
-    [ApiController, Route("[controller]")]
-    public class FileController : ControllerBase
+    [ApiController]
+    [Route("[controller]")]
+    public class FileController(DatabaseContext databaseContext) : ControllerBase
     {
-        private readonly DatabaseContext databaseContext;
-
-        public FileController(DatabaseContext databaseContext)
-        {
-            this.databaseContext = databaseContext;
-        }
 
         [HttpGet("GetPaged/{page}/{pageCount}")]
         public async Task<IActionResult> GetPaged(int page, int pageCount)
@@ -45,7 +35,7 @@ namespace Sam.EndPoint.WebApi.Controllers
             if (result is null)
                 return NotFound(name);
 
-            return File(result.file_stream, MediaTypeNames.Application.Octet, result.name);
+            return File(result.file_stream!, MediaTypeNames.Application.Octet, result.name);
         }
 
         [HttpPost("Upload")]
@@ -61,6 +51,5 @@ namespace Sam.EndPoint.WebApi.Controllers
         {
             return Ok(await databaseContext.Table1.RemoveByNameAsync(name));
         }
-
     }
 }

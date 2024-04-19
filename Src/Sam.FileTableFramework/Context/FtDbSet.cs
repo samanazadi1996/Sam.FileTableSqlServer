@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Sam.FileTableFramework.Context
 {
-    public class FtDbSet
+    public sealed class FtDbSet
     {
         private string TableName { get; set; }
         private string ConnectionString { get; set; }

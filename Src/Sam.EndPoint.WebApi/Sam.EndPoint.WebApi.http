@@ -1,0 +1,6 @@
+@Sam.EndPoint.WebApi_HostAddress = http://localhost:5156
+
+GET {{Sam.EndPoint.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
