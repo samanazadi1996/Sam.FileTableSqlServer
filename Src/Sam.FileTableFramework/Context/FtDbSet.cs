@@ -12,7 +12,7 @@ namespace Sam.FileTableFramework.Context
         private string TableName { get; set; }
         private string ConnectionString { get; set; }
 
-        public FtDbSet(string tableName, string connectionString)
+        internal FtDbSet(string tableName, string connectionString)
         {
             TableName = tableName;
             ConnectionString = connectionString;
@@ -172,10 +172,10 @@ namespace Sam.FileTableFramework.Context
                 {
                     object result = await command.ExecuteScalarAsync();
 
-                    if (result != null && result != DBNull.Value)
-                        return Convert.ToInt32(result);
-                    else
+                    if (result == null && result == DBNull.Value)
                         return 0;
+
+                    return Convert.ToInt32(result);
                 }
             }
         }
