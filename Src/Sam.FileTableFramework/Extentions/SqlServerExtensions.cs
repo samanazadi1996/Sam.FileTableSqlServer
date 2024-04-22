@@ -1,4 +1,5 @@
 ﻿using Sam.FileTableFramework.Context;
+using System;
 using System.Linq;
 
 namespace Sam.FileTableFramework.Extentions
@@ -9,9 +10,18 @@ namespace Sam.FileTableFramework.Extentions
         {
             context.ConnectionString = connectionString;
 
-            foreach (var item in context.GetType().GetProperties().Where(p => p.PropertyType.FullName.Equals(typeof(FtDbSet).FullName)))
-                context.GetType().GetProperty(item.Name).SetValue(context, new FtDbSet(item.Name, context.ConnectionString!));
-        }
+            var props = context.GetType().GetProperties().Where(p => typeof(FtDbSet).IsAssignableFrom(p.PropertyType));
 
+            foreach (var item in props)
+            {
+                var ftDbSetInstance = Activator.CreateInstance(item.PropertyType);
+
+                typeof(FtDbSet).GetProperty("TableName").SetValue(ftDbSetInstance, item.Name);
+                typeof(FtDbSet).GetProperty("ConnectionString").SetValue(ftDbSetInstance, context.ConnectionString);
+
+                context.GetType().GetProperty(item.Name).SetValue(context, ftDbSetInstance);
+            }
+
+        }
     }
 }

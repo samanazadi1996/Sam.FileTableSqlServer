@@ -16,7 +16,7 @@ namespace Sam.FileTableFramework.Extentions
             using (var connection = new SqlConnection(context.ConnectionString))
             {
                 connection.Open();
-                foreach (var item in context.GetType().GetProperties().Where(p => p.PropertyType.FullName.Equals(typeof(FtDbSet).FullName)))
+                foreach (var item in context.GetType().GetProperties().Where(p => typeof(FtDbSet).IsAssignableFrom(p.PropertyType)))
                 {
                     var existTable = TableExists(connection, item.Name);
                     if (!existTable)

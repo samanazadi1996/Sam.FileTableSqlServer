@@ -7,16 +7,10 @@ using System.Threading.Tasks;
 
 namespace Sam.FileTableFramework.Context
 {
-    public sealed class FtDbSet
+    public class FtDbSet
     {
-        private string TableName { get; set; }
-        private string ConnectionString { get; set; }
-
-        internal FtDbSet(string tableName, string connectionString)
-        {
-            TableName = tableName;
-            ConnectionString = connectionString;
-        }
+        public string TableName { get; private set; }
+        public string ConnectionString { get; private set; }
 
         public async Task<FileEntity?> FindByNameAsync(string fileName)
         {
