@@ -56,7 +56,7 @@ namespace Sam.FileTableFramework.Context
             {
                 await connection.OpenAsync();
 
-                string sqlQuery = $"SELECT * FROM [{TableName}]";
+                string sqlQuery = $"SELECT stream_id,name,file_type,cached_file_size,creation_time,last_write_time,last_access_time FROM [{TableName}]";
                 var resultList = new List<FileEntityDto>();
 
                 using (var command = new SqlCommand(sqlQuery, connection))
@@ -90,7 +90,7 @@ namespace Sam.FileTableFramework.Context
                 await connection.OpenAsync();
 
                 var skip = (page - 1) * pageCount;
-                string pagedQuery = $"SELECT *  FROM [{TableName}] ORDER BY name OFFSET {skip} ROWS FETCH NEXT {pageCount} ROWS ONLY";
+                string pagedQuery = $"SELECT stream_id,name,file_type,cached_file_size,creation_time,last_write_time,last_access_time FROM [{TableName}] ORDER BY name OFFSET {skip} ROWS FETCH NEXT {pageCount} ROWS ONLY";
 
                 var list = new List<FileEntityDto>();
 
