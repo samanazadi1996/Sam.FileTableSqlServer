@@ -1,18 +1,6 @@
-# SQL Server FILETABLE
- - SQL Server instance with enabled FILESTREAM feature: Open SQL Server Configuration Manager and check on Enable FILESTREAM for Transact SQL access.
+# Building a File Management Application with ASP.NET Core and SQL Server FileTable 
 
-![enable-filestream-for-transact-sql-access](https://www.sqlshack.com/wp-content/uploads/2019/03/enable-filestream-for-transact-sql-access.png)
+## Introduction
 
-- You can verify the configuration using the following query.
-```
-exec sp_configure ;
-exec sp_configure @configname = 'filestream access level';
-exec sp_configure filestream_access_level,2
-reconfigure
-```
-In the below screenshot, we can verify that we have enabled FILESTREAM access for both Windows streaming and T-SQL.
+In today's digital world, effective file management is crucial for individuals and organizations alike. Developing a file management application can help streamline file organization and improve accessibility. In this article, we will explore the intricacies and implementation steps of building a file management application using ASP.NET Core and SQL Server FileTable.
 
-![filestream-access-for-both-windows-streaming](./Documents/Images/SQLServerProperties.png)
-
-
-[More Information](./Documents/Images/QueryResult.png)
