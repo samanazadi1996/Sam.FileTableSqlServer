@@ -12,7 +12,7 @@ namespace Sam.FileTableFramework.Context
         public string TableName { get; private set; }
         public string ConnectionString { get; private set; }
 
-        public async Task<FileEntity?> FindByNameAsync(string fileName)
+        public virtual async Task<FileEntity?> FindByNameAsync(string fileName)
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
@@ -50,7 +50,7 @@ namespace Sam.FileTableFramework.Context
                 return null;
             }
         }
-        public async Task<IEnumerable<FileEntityDto>> GetAllAsync()
+        public virtual async Task<IEnumerable<FileEntityDto>> GetAllAsync()
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
@@ -83,7 +83,7 @@ namespace Sam.FileTableFramework.Context
                 return resultList;
             }
         }
-        public async Task<PagedListFileEntityDto> GetPagedListAsync(int page, int pageCount)
+        public virtual async Task<PagedListFileEntityDto> GetPagedListAsync(int page, int pageCount)
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
@@ -125,7 +125,7 @@ namespace Sam.FileTableFramework.Context
                 return new PagedListFileEntityDto(list, page, pageCount, totalItem);
             }
         }
-        public async Task<string> CreateAsync(string fileName, Stream stream)
+        public virtual async Task<string> CreateAsync(string fileName, Stream stream)
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
@@ -142,7 +142,7 @@ namespace Sam.FileTableFramework.Context
                 return fileName;
             }
         }
-        public async Task<int> RemoveByNameAsync(string fileName)
+        public virtual async Task<int> RemoveByNameAsync(string fileName)
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
@@ -155,7 +155,7 @@ namespace Sam.FileTableFramework.Context
                 }
             }
         }
-        public async Task<int> Count()
+        public virtual async Task<int> Count()
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
