@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{A07E4178-ABFA-495E-9BC7-D41CE66AA563}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{A07E4178-ABFA-495E-9BC7-D41CE66AA563}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sam.FileTableFramework", "Src\Sam.FileTableFramework\Sam.FileTableFramework.csproj", "{6375D057-F0DF-4DCE-9653-83A96E84B409}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sam.FileTableFramework", "Source\Sam.FileTableFramework\Sam.FileTableFramework.csproj", "{6375D057-F0DF-4DCE-9653-83A96E84B409}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sam.Persistence", "Src\Sam.Persistence\Sam.Persistence.csproj", "{A691925D-EBBA-4067-A0FC-9D47E938E87B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sam.Persistence", "Source\Sam.Persistence\Sam.Persistence.csproj", "{A691925D-EBBA-4067-A0FC-9D47E938E87B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sam.EndPoint.ConsoleApp", "Src\Sam.EndPoint.ConsoleApp\Sam.EndPoint.ConsoleApp.csproj", "{57600945-E384-4695-8066-A1E8D3E61D77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sam.EndPoint.ConsoleApp", "Source\Sam.EndPoint.ConsoleApp\Sam.EndPoint.ConsoleApp.csproj", "{57600945-E384-4695-8066-A1E8D3E61D77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sam.EndPoint.WebApi", "Src\Sam.EndPoint.WebApi\Sam.EndPoint.WebApi.csproj", "{44A2B118-3509-4C1A-AB56-D26D5D872811}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sam.EndPoint.WebApi", "Source\Sam.EndPoint.WebApi\Sam.EndPoint.WebApi.csproj", "{44A2B118-3509-4C1A-AB56-D26D5D872811}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

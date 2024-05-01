@@ -12,7 +12,7 @@ reconfigure
 ```
 In the below screenshot, we can verify that we have enabled FILESTREAM access for both Windows streaming and T-SQL.
 
-![filestream-access-for-both-windows-streaming](https://www.sqlshack.com/wp-content/uploads/2019/03/filestream-access-for-both-windows-streaming-and-t.png)
+![filestream-access-for-both-windows-streaming](./Documents/Images/SQLServerProperties.png)
 
 
-[More Information](https://www.sqlshack.com/sql-server-filetable-the-next-generation-of-sql-filestream/)
+[More Information](./Documents/Images/QueryResult.png)
