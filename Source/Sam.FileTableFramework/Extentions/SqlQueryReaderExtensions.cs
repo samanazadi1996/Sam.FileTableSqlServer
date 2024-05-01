@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Sam.FileTableFramework.Extentions
 {
-    internal static class SqlQueryReaderExtensions
+    public static class SqlQueryReaderExtensions
     {
-        internal static async Task<List<T>> GetList<T>(this SqlConnection connection, string sqlQuery) where T : class
+        public static async Task<List<T>> GetList<T>(this SqlConnection connection, string sqlQuery) where T : class
         {
             var props = typeof(T).GetProperties();
             var result = new List<T>();
@@ -33,7 +33,7 @@ namespace Sam.FileTableFramework.Extentions
             }
             return result;
         }
-        internal static async Task<T?> GetFirst<T>(this SqlConnection connection, string sqlQuery) where T : class
+        public static async Task<T?> GetFirst<T>(this SqlConnection connection, string sqlQuery) where T : class
         {
             var props = typeof(T).GetProperties();
 
@@ -58,7 +58,7 @@ namespace Sam.FileTableFramework.Extentions
             }
             return null;
         }
-        internal static async Task<int> GetInt(this SqlConnection connection, string sqlQuery)
+        public static async Task<int> GetInt(this SqlConnection connection, string sqlQuery)
         {
             using (var countCommand = new SqlCommand(sqlQuery, connection))
             {
