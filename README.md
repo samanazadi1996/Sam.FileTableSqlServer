@@ -20,7 +20,7 @@ In today's digital world, effective file management is crucial for individuals a
         NuGet\Install-Package Sam.FileTableFramework -Version 1.0.1
         ```
 
-   - Package Manager
+   - Package Reference
         ``` c#
         <PackageReference Include="Sam.FileTableFramework" Version="1.0.1" />
         ```
