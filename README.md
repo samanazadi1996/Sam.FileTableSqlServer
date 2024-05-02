@@ -21,7 +21,7 @@ In today's digital world, effective file management is crucial for individuals a
         ```
 
    - Package Reference
-        ``` c#
+        ``` xml
         <PackageReference Include="Sam.FileTableFramework" Version="1.0.1" />
         ```
     
