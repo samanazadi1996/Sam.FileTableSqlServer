@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Sam.FileTableFramework.Context
+﻿namespace Sam.FileTableFramework.Context
 {
     public abstract class FileTableDBContext
     {
