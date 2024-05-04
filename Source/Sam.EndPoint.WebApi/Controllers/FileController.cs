@@ -24,7 +24,7 @@ namespace Sam.EndPoint.WebApi.Controllers
         [HttpGet("Count")]
         public async Task<IActionResult> Count()
         {
-            return Ok(await databaseContext.Table1.Count());
+            return Ok(await databaseContext.Table1.CountAsync());
         }
 
         [HttpGet("Download/{name}")]

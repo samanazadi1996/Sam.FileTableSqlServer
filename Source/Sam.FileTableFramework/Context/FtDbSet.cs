@@ -81,7 +81,7 @@ namespace Sam.FileTableFramework.Context
                 }
             }
         }
-        public virtual async Task<int> Count()
+        public virtual async Task<int> CountAsync()
         {
             using (var connection = new SqlConnection(ConnectionString))
             {

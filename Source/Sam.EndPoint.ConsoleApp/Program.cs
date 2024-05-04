@@ -7,7 +7,7 @@ var db = new DatabaseContext();
 db.UseSqlServer(connectionStrings);
 db.Migrate();
 
-var result = await db.Table1.Count();
+var result = await db.Table1.CountAsync();
 
 Console.WriteLine($"Count Files in Table1 : {result}");
 Console.ReadKey();
