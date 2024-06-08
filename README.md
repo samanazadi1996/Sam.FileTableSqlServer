@@ -12,7 +12,7 @@ In today's digital world, effective file management is crucial for individuals a
    - .NET CLI
 
         ``` sh
-        dotnet add package Sam.FileTableFramework -version 1.0.1
+        dotnet add package Sam.FileTableFramework --version 1.0.1
         ```
    - Package Manager
 
