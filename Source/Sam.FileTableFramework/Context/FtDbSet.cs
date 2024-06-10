@@ -9,8 +9,8 @@ namespace Sam.FileTableFramework.Context
 {
     public class FtDbSet
     {
-        public string TableName { get; private set; }
-        public string ConnectionString { get; private set; }
+        public string? TableName { get; private set; }
+        public string? ConnectionString { get; private set; }
 
         public virtual async Task<FileEntity?> FindByNameAsync(string fileName)
         {
