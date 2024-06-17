@@ -1,6 +1,7 @@
 ﻿using Sam.FileTableFramework.Extentions;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Sam.FileTableFramework.Context
 {
@@ -23,6 +24,20 @@ namespace Sam.FileTableFramework.Context
                 GetType().GetProperty(item.Name).SetValue(this, ftDbSetInstance);
             }
 
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            var props = GetType().GetProperties().Where(p => typeof(FtDbSet).IsAssignableFrom(p.PropertyType));
+
+            foreach (var item in props)
+            {
+                var ftDbSetInstance = (FtDbSet)item.GetValue(this);
+                if (ftDbSetInstance != null)
+                {
+                    await ftDbSetInstance.SaveChangesAsync();
+                }
+            }
         }
     }
 }
