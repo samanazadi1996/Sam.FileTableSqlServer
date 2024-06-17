@@ -8,12 +8,12 @@ namespace Sam.FileTableFramework.Extentions
     {
         public static void Migrate(this FileTableDBContext context)
         {
-            GenerateDataBase(context.ConnectionString!);
+            GenerateDataBase(context.options.ConnectionString!);
             GenerateTables(context);
         }
         public static void GenerateTables(this FileTableDBContext context)
         {
-            using (var connection = new SqlConnection(context.ConnectionString))
+            using (var connection = new SqlConnection(context.options.ConnectionString))
             {
                 connection.Open();
                 foreach (var item in context.GetType().GetProperties().Where(p => typeof(FtDbSet).IsAssignableFrom(p.PropertyType)))
