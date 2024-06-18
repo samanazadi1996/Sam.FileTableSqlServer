@@ -1,18 +1,14 @@
 ﻿using Sam.FileTableFramework.Entities;
 using Sam.FileTableFramework.Extentions;
-using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 
 namespace Sam.FileTableFramework.Context
 {
     public class FtDbSet
     {
-        private List<ChangeTrack>? Changes { get; set; }
         public string? TableName { get; private set; }
         public string? ConnectionString { get; private set; }
 
@@ -55,6 +51,36 @@ namespace Sam.FileTableFramework.Context
                 return new PagedListFileEntityDto(list, page, pageCount, totalItem);
             }
         }
+        public virtual async Task<string> CreateAsync(string fileName, Stream stream)
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = $"INSERT INTO {TableName} ([name],[file_stream]) VALUES ('{fileName}',@fs)";
+                    command.Parameters.AddWithValue("@fs", stream);
+
+                    await command.ExecuteNonQueryAsync();
+                }
+
+                return fileName;
+            }
+        }
+        public virtual async Task<int> RemoveByNameAsync(string fileName)
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                string sqlQuery = $"DELETE [{TableName}] WHERE [name] = '{fileName}'";
+                await connection.OpenAsync();
+
+                using (var command = new SqlCommand(sqlQuery, connection))
+                {
+                    return await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
         public virtual async Task<int> CountAsync()
         {
             using (var connection = new SqlConnection(ConnectionString))
@@ -65,62 +91,6 @@ namespace Sam.FileTableFramework.Context
                 return await connection.GetInt(countQuery);
             }
         }
-
-        public virtual void Create(string fileName, Stream stream)
-        {
-            Changes ??= new List<ChangeTrack>();
-            Changes.Add(ChangeTrack.Create(fileName, stream));
-        }
-        public virtual void Remove(FileEntity entity)
-        {
-            Changes ??= new List<ChangeTrack>();
-            Changes.Add(ChangeTrack.Delete(entity.stream_id));
-        }
-
-        internal async Task SaveChangesAsync()
-        {
-            if (Changes != null)
-            {
-                using (var connection = new SqlConnection(ConnectionString))
-                {
-                    await connection.OpenAsync();
-                    using (var transaction = connection.BeginTransaction())
-                    {
-                        try
-                        {
-                            foreach (var item in Changes.Where(p => p.State == Enums.EntityState.Delete))
-                            {
-                                string sqlQuery = $"DELETE FROM [{TableName}] WHERE [stream_id] = @StreamId";
-
-                                using (var command = new SqlCommand(sqlQuery, connection, transaction))
-                                {
-                                    command.Parameters.AddWithValue("@StreamId", item.Id);
-                                    await command.ExecuteNonQueryAsync();
-                                }
-                            }
-                            foreach (var item in Changes.Where(p => p.State == Enums.EntityState.Create))
-                            {
-                                using (var command = new SqlCommand($"INSERT INTO {TableName} ([name],[file_stream]) VALUES (@Name, @fs)", connection, transaction))
-                                {
-                                    command.Parameters.AddWithValue("@Name", item.Name);
-                                    command.Parameters.AddWithValue("@fs", item.Stream);
-
-                                    await command.ExecuteNonQueryAsync();
-                                }
-                            }
-
-                            transaction.Commit();
-                        }
-                        catch (Exception)
-                        {
-                            transaction.Rollback();
-                            throw;
-                        }
-                    }
-                }
-            }
-        }
-
 
     }
 }

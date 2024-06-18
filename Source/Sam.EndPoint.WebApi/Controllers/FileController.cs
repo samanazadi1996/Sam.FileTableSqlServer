@@ -43,24 +43,13 @@ namespace Sam.EndPoint.WebApi.Controllers
         {
             var fileName = Guid.NewGuid() + file.FileName[file.FileName.LastIndexOf(".", StringComparison.Ordinal)..];
             var stream = file.OpenReadStream();
-
-            databaseContext.Table1.Create(fileName, stream);
-            await databaseContext.SaveChangesAsync();
-            return Ok();
+            return Ok(await databaseContext.Table1.CreateAsync(fileName, stream));
         }
 
         [HttpDelete("Delete")]
         public async Task<IActionResult> Delete(string name)
         {
-            var result = await databaseContext.Table1.FindByNameAsync(name);
-
-            if (result is null)
-                return NotFound(name);
-
-            databaseContext.Table1.Remove(result);
-            await databaseContext.SaveChangesAsync();
-
-            return Ok();
+            return Ok(await databaseContext.Table1.RemoveByNameAsync(name));
         }
     }
 }
