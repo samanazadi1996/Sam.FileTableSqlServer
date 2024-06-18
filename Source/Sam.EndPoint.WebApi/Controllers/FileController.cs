@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Sam.EndPoint.WebApi.Models;
 using Sam.FileTableFramework.Linq;
 using Sam.Persistence;
@@ -35,7 +36,17 @@ namespace Sam.EndPoint.WebApi.Controllers
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
-            var result = await databaseContext.Table1.ToListAsync();
+            var query = databaseContext.Table1;
+
+            var result = await query
+                .Select(p => new FileEntityDto()
+                {
+                    Name = p.name,
+                    Size = p.cached_file_size,
+                    Id = p.stream_id,
+                    Type = p.file_type
+                })
+                .ToListAsync<FileEntityDto>();
 
             return Ok(result);
         }
