@@ -1,11 +1,11 @@
-﻿using Sam.FileTableFramework.Entities;
+﻿using Sam.FileTableFramework.Context.Internall;
+using Sam.FileTableFramework.Entities;
 using Sam.FileTableFramework.Extentions;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 
 namespace Sam.FileTableFramework.Context
@@ -15,46 +15,35 @@ namespace Sam.FileTableFramework.Context
         private List<ChangeTrack>? Changes { get; set; }
         public string? TableName { get; private set; }
         public string? ConnectionString { get; private set; }
+        internal ContextQuery? Query { get; set; }
+        public string ToQueryString()
+        {
+            Query ??= new ContextQuery();
 
-        public virtual async Task<FileEntity?> FindByNameAsync(string fileName)
+            var selectClause = string.Join(", ", Query.Fields);
+            var fromClause = $"FROM {TableName}";
+            var whereClause = Query.Where != null ? $"WHERE {string.Join(" AND ", Query.Where)}" : string.Empty;
+            var orderByClause = Query.OrderBy != null ? $"ORDER BY {string.Join(", ", Query.OrderBy)}{(Query.OrderByDescending == true ? " desc " : "")}" : "ORDER BY name";
+
+            var skipClause = Query.Skip.HasValue ? $"OFFSET {Query.Skip.Value} ROWS" : string.Empty;
+            var takeClause = Query.Take.HasValue ? $"FETCH NEXT {Query.Take.Value} ROWS ONLY" : string.Empty;
+
+            var queryString = $"SELECT {selectClause} {fromClause} {whereClause} {orderByClause} {skipClause} {takeClause};";
+
+            return queryString.Trim();
+        }
+        public async Task<IEnumerable<FileEntity>> ToListAsync()
+            => await ToListAsync<FileEntity>();
+        public async Task<IEnumerable<T>> ToListAsync<T>() where T : class
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
                 await connection.OpenAsync();
 
-                string sqlQuery = $"SELECT TOP 1 * FROM [{TableName}] WHERE [name] = '{fileName}'";
-
-                return await connection.GetFirst<FileEntity>(sqlQuery);
+                string sqlQuery = ToQueryString();
+                return await connection.GetList<T>(sqlQuery);
             }
-        }
-        public virtual async Task<IEnumerable<FileEntityDto>> GetAllAsync()
-        {
-            using (var connection = new SqlConnection(ConnectionString))
-            {
-                await connection.OpenAsync();
-
-                string sqlQuery = $"SELECT stream_id,name,file_type,cached_file_size,creation_time,last_write_time,last_access_time FROM [{TableName}]";
-                return await connection.GetList<FileEntityDto>(sqlQuery);
-            }
-        }
-        public virtual async Task<PagedListFileEntityDto> GetPagedListAsync(int page, int pageCount)
-        {
-            using (var connection = new SqlConnection(ConnectionString))
-            {
-                await connection.OpenAsync();
-
-                var skip = (page - 1) * pageCount;
-                string pagedQuery = $"SELECT stream_id,name,file_type,cached_file_size,creation_time,last_write_time,last_access_time FROM [{TableName}] ORDER BY name OFFSET {skip} ROWS FETCH NEXT {pageCount} ROWS ONLY";
-
-                var list = await connection.GetList<FileEntityDto>(pagedQuery);
-
-                string countQuery = $"SELECT COUNT(*) FROM [{TableName}]";
-
-                var totalItem = await connection.GetInt(countQuery);
-
-                return new PagedListFileEntityDto(list, page, pageCount, totalItem);
-            }
-        }
+        } 
         public virtual async Task<int> CountAsync()
         {
             using (var connection = new SqlConnection(ConnectionString))
@@ -65,7 +54,6 @@ namespace Sam.FileTableFramework.Context
                 return await connection.GetInt(countQuery);
             }
         }
-
         public virtual void Create(string fileName, Stream stream)
         {
             Changes ??= new List<ChangeTrack>();
@@ -120,7 +108,5 @@ namespace Sam.FileTableFramework.Context
                 }
             }
         }
-
-
     }
 }

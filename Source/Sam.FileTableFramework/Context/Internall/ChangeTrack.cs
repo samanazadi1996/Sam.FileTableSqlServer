@@ -2,8 +2,9 @@
 using System;
 using System.IO;
 
-namespace Sam.FileTableFramework.Context
+namespace Sam.FileTableFramework.Context.Internall
 {
+
     internal class ChangeTrack
     {
         private ChangeTrack()
