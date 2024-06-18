@@ -25,19 +25,5 @@ namespace Sam.FileTableFramework.Context
             }
 
         }
-
-        public async Task SaveChangesAsync()
-        {
-            var props = GetType().GetProperties().Where(p => typeof(FtDbSet).IsAssignableFrom(p.PropertyType));
-
-            foreach (var item in props)
-            {
-                var ftDbSetInstance = (FtDbSet)item.GetValue(this);
-                if (ftDbSetInstance != null)
-                {
-                    await ftDbSetInstance.SaveChangesAsync();
-                }
-            }
-        }
     }
 }

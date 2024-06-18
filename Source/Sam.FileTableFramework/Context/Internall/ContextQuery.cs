@@ -6,7 +6,7 @@ namespace Sam.FileTableFramework.Context.Internall
     {
         public ContextQuery()
         {
-            Fields = "stream_id,name,file_type,cached_file_size,creation_time,last_write_time,last_access_time".Split(",");
+            Fields = new string[] { "*" };
         }
         public string[] Fields { get; set; }
         public int? Skip { get; set; }

@@ -21,14 +21,13 @@ namespace Sam.EndPoint.WebApi.Controllers
                 .Skip(page)
                 .Take(pageCount)
                 .OrderBy(p => p.name)
-                .Select(p => new FileEntityDto()
+                .ToListAsync(p => new FileEntityDto()
                 {
                     Name = p.name,
                     Size = p.cached_file_size,
                     Id = p.stream_id,
                     Type = p.file_type
-                })
-                .ToListAsync<FileEntityDto>();
+                });
 
             return Ok(result);
         }
@@ -39,14 +38,13 @@ namespace Sam.EndPoint.WebApi.Controllers
             var query = databaseContext.Table1;
 
             var result = await query
-                .Select(p => new FileEntityDto()
+                .ToListAsync(p => new FileEntityDto()
                 {
                     Name = p.name,
                     Size = p.cached_file_size,
                     Id = p.stream_id,
                     Type = p.file_type
-                })
-                .ToListAsync<FileEntityDto>();
+                });
 
             return Ok(result);
         }
@@ -76,9 +74,9 @@ namespace Sam.EndPoint.WebApi.Controllers
             var fileName = Guid.NewGuid() + file.FileName[file.FileName.LastIndexOf(".", StringComparison.Ordinal)..];
             var stream = file.OpenReadStream();
 
-            databaseContext.Table1.Create(fileName, stream);
-            await databaseContext.SaveChangesAsync();
-            return Ok();
+            await databaseContext.Table1.CreateAsync(fileName, stream);
+
+            return Ok(fileName);
         }
 
         [HttpDelete("Delete")]
@@ -89,10 +87,9 @@ namespace Sam.EndPoint.WebApi.Controllers
             if (result is null || !result.Any())
                 return NotFound(name);
 
-            databaseContext.Table1.Remove(result.First());
-            await databaseContext.SaveChangesAsync();
+            var temp = await databaseContext.Table1.RemoveAsync(result.First());
 
-            return Ok();
+            return Ok(temp);
         }
 
         [HttpGet("TestQueryString")]
@@ -105,7 +102,9 @@ namespace Sam.EndPoint.WebApi.Controllers
                 .Take(3)
                 .Skip(2)
                 .Where("name = 'saman'")
-                .OrderBy(p => p.name).OrderBy(p => p.is_archive).OrderByDescending(p => p.stream_id)
+                .OrderBy(p => p.name)
+                .OrderBy(p => p.is_archive)
+                .OrderByDescending(p => p.stream_id)
                 .Select(p => new FileEntityDto()
                 {
                     Name = p.name,
@@ -117,7 +116,13 @@ namespace Sam.EndPoint.WebApi.Controllers
             return Ok(new
             {
                 Query = result.ToQueryString(),
-                Data = await result.ToListAsync<FileEntityDto>()
+                Data = await result.ToListAsync(p => new FileEntityDto()
+                {
+                    Name = p.name,
+                    Size = p.cached_file_size,
+                    Id = p.stream_id,
+                    Type = p.file_type
+                })
             });
         }
 
