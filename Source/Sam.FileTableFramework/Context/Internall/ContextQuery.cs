@@ -4,11 +4,7 @@ namespace Sam.FileTableFramework.Context.Internall
 {
     internal class ContextQuery
     {
-        public ContextQuery()
-        {
-            Fields = new string[] { "*" };
-        }
-        public string[] Fields { get; set; }
+        public string[]? Fields { get; set; }
         public int? Skip { get; set; }
         public int? Take { get; set; }
         public List<string>? Where { get; set; }

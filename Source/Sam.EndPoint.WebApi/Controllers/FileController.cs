@@ -58,12 +58,10 @@ namespace Sam.EndPoint.WebApi.Controllers
         [HttpGet("Download/{name}")]
         public async Task<IActionResult> Download(string name)
         {
-            var result = await databaseContext.Table1.Where($"name = '{name}'").ToListAsync();
+            var entity = await databaseContext.Table1.Where($"name = '{name}'").FirstOrDefaultAsync();
 
-            if (result is null || !result.Any())
-                return NotFound(name);
-
-            var entity = result.First();
+            if (entity is null)
+                return NotFound(nameof(NotFound));
 
             return File(entity.file_stream!, MediaTypeNames.Application.Octet, entity.name);
         }
@@ -82,12 +80,12 @@ namespace Sam.EndPoint.WebApi.Controllers
         [HttpDelete("Delete")]
         public async Task<IActionResult> Delete(string name)
         {
-            var result = await databaseContext.Table1.Where($"name = '{name}'").ToListAsync();
+            var entity = await databaseContext.Table1.Where($"name = '{name}'").FirstOrDefaultAsync();
 
-            if (result is null || !result.Any())
-                return NotFound(name);
+            if (entity is null)
+                return NotFound(nameof(NotFound));
 
-            var temp = await databaseContext.Table1.RemoveAsync(result.First());
+            var temp = await databaseContext.Table1.RemoveAsync(entity);
 
             return Ok(temp);
         }
