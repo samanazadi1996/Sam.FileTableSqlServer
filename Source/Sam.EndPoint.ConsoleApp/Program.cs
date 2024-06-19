@@ -1,5 +1,6 @@
 ﻿using Sam.FileTableFramework.Extentions;
 using Sam.Persistence;
+using Sam.FileTableFramework.Linq;
 using System;
 
 var connectionStrings = "Data Source =.; Initial Catalog = db1; Integrated Security = true";
