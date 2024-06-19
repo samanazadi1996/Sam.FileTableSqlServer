@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Sam.EndPoint.WebApi.Models;
 using Sam.FileTableFramework.Linq;
 using Sam.Persistence;

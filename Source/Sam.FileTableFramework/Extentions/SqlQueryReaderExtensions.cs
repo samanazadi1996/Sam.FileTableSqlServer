@@ -21,10 +21,14 @@ namespace Sam.FileTableFramework.Extentions
                         var obj = Activator.CreateInstance<T>();
                         foreach (var prop in props)
                         {
-                            var value = reader[prop.Name]; // Get the value from the reader
-                            if (value != DBNull.Value)     // Check for DBNull
+                            if (reader.HasColumn(prop.Name))
                             {
-                                prop.SetValue(obj, value); // Set the property value
+                                var ordinal = reader.GetOrdinal(prop.Name); // Get ordinal outside of IsDBNull check
+                                if (!reader.IsDBNull(ordinal)) // Check for DBNull using ordinal
+                                {
+                                    var value = reader.GetValue(ordinal);
+                                    prop.SetValue(obj, value);
+                                }
                             }
                         }
                         result.Add(obj);
@@ -46,10 +50,14 @@ namespace Sam.FileTableFramework.Extentions
                         var obj = Activator.CreateInstance<T>();
                         foreach (var prop in props)
                         {
-                            var value = reader[prop.Name]; // Get the value from the reader
-                            if (value != DBNull.Value)     // Check for DBNull
+                            if (reader.HasColumn(prop.Name))
                             {
-                                prop.SetValue(obj, value); // Set the property value
+                                var ordinal = reader.GetOrdinal(prop.Name); // Get ordinal outside of IsDBNull check
+                                if (!reader.IsDBNull(ordinal)) // Check for DBNull using ordinal
+                                {
+                                    var value = reader.GetValue(ordinal);
+                                    prop.SetValue(obj, value);
+                                }
                             }
                         }
                         return obj;
@@ -65,5 +73,17 @@ namespace Sam.FileTableFramework.Extentions
                 return (int)await countCommand.ExecuteScalarAsync();
             }
         }
+
+
+        private static bool HasColumn(this SqlDataReader reader, string columnName)
+        {
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                if (reader.GetName(i).Equals(columnName, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+            return false;
+        }
+
     }
 }

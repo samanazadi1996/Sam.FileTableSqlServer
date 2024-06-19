@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Sam.FileTableFramework.Linq
 {
-    public static class FileTableFrameworkLinq
+    public static class FtDbSetLinq
     {
         public static FtDbSet Skip(this FtDbSet dbset, int skip)
         {
