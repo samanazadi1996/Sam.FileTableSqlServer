@@ -15,14 +15,14 @@ namespace Sam.FileTableFramework.Linq
     {
         public static FtDbSet Skip(this FtDbSet dbset, int skip)
         {
-            dbset.Query ??= new Context.Internall.ContextQuery();
+            dbset.Query ??= new ContextQuery();
 
             dbset.Query.Skip = skip;
             return dbset;
         }
         public static FtDbSet Take(this FtDbSet dbset, int take)
         {
-            dbset.Query ??= new Context.Internall.ContextQuery();
+            dbset.Query ??= new ContextQuery();
 
             dbset.Query.Take = take;
             return dbset;
@@ -33,7 +33,7 @@ namespace Sam.FileTableFramework.Linq
         }
         public static FtDbSet Where(this FtDbSet dbset, params string[] whereClause)
         {
-            dbset.Query ??= new Context.Internall.ContextQuery();
+            dbset.Query ??= new ContextQuery();
             if (whereClause != null)
             {
                 dbset.Query.Where ??= new List<string>();
@@ -44,7 +44,7 @@ namespace Sam.FileTableFramework.Linq
         }
         public static FtDbSet OrderBy<T>(this FtDbSet dbset, Expression<Func<FileEntity, T>> keySelector, bool orderByDescending = false)
         {
-            dbset.Query ??= new Context.Internall.ContextQuery();
+            dbset.Query ??= new ContextQuery();
             dbset.Query.OrderByDescending = orderByDescending;
             dbset.Query.OrderBy ??= new List<string>();
 
@@ -66,11 +66,11 @@ namespace Sam.FileTableFramework.Linq
         }
         public static FtDbSet Select<T>(this FtDbSet dbset, Expression<Func<FileEntity, T>> selector)
         {
-            dbset.Query ??= new Context.Internall.ContextQuery();
+            dbset.Query ??= new ContextQuery();
 
             var selectList = new List<string>();
 
-            void ProcessMemberExpression(MemberExpression memberExpr, string alias = null)
+            void ProcessMemberExpression(MemberExpression memberExpr, string? alias = null)
             {
                 var fieldName = memberExpr.Member.Name;
                 alias ??= memberExpr.Member.Name;
