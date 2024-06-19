@@ -1,4 +1,4 @@
-﻿using Sam.FileTableFramework.Context.Internall;
+using Sam.FileTableFramework.Context.Internall;
 
 namespace Sam.FileTableFramework.Context
 {
