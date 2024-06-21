@@ -15,7 +15,7 @@ namespace Sam.FileTableFramework.Linq
     {
         #region Skip
         public static ContextQuery Skip(this FtDbSet dbset, int skip)
-            => Skip(dbset.AsQueryable(), skip);
+            => dbset.AsQueryable().Skip(skip);
         public static ContextQuery Skip(this ContextQuery contextQuery, int skip)
         {
             contextQuery.Skip = skip;
@@ -25,7 +25,7 @@ namespace Sam.FileTableFramework.Linq
 
         #region Take
         public static ContextQuery Take(this FtDbSet dbset, int take)
-            => Take(dbset.AsQueryable(), take);
+            => dbset.AsQueryable().Take(take);
         public static ContextQuery Take(this ContextQuery contextQuery, int take)
         {
             contextQuery.Take = take;
@@ -35,7 +35,7 @@ namespace Sam.FileTableFramework.Linq
 
         #region OrderBy
         public static ContextQuery OrderBy<T>(this FtDbSet dbset, Expression<Func<FileEntity, T>> keySelector)
-            => OrderBy<T>(dbset.AsQueryable(), keySelector);
+            => dbset.AsQueryable().OrderBy(keySelector);
         public static ContextQuery OrderBy<T>(this ContextQuery contextQuery, Expression<Func<FileEntity, T>> keySelector)
         {
 
@@ -53,7 +53,7 @@ namespace Sam.FileTableFramework.Linq
             }
         }
         public static ContextQuery OrderByDescending<T>(this FtDbSet dbset, Expression<Func<FileEntity, T>> keySelector)
-            => OrderByDescending<T>(dbset.AsQueryable(), keySelector);
+            => dbset.AsQueryable().OrderByDescending(keySelector);
         public static ContextQuery OrderByDescending<T>(this ContextQuery contextQuery, Expression<Func<FileEntity, T>> keySelector)
         {
             if (keySelector.Body is MemberExpression memberExpr)
@@ -84,7 +84,7 @@ namespace Sam.FileTableFramework.Linq
 
         #region Where
         public static ContextQuery Where(this FtDbSet dbset, params string[] whereClause)
-            => Where(dbset.AsQueryable(), whereClause);
+            => dbset.AsQueryable().Where(whereClause);
         public static ContextQuery Where(this ContextQuery contextQuery, params string[] whereClause)
         {
             if (whereClause != null)
@@ -99,7 +99,7 @@ namespace Sam.FileTableFramework.Linq
 
         #region Select
         public static ContextQuery Select<T>(this FtDbSet dbset, Expression<Func<FileEntity, T>> selector)
-            => Select<T>(dbset.AsQueryable(), selector);
+            => dbset.AsQueryable().Select(selector);
         public static ContextQuery Select<T>(this ContextQuery contextQuery, Expression<Func<FileEntity, T>> selector)
         {
             var selectList = new List<string>();
@@ -181,7 +181,7 @@ namespace Sam.FileTableFramework.Linq
         public static ContextQuery AsQueryable(this FtDbSet dbset)
             => new ContextQuery(dbset);
         public static string ToQueryString(this FtDbSet dbset)
-            => ToQueryString(dbset.AsQueryable());
+            => dbset.AsQueryable().ToQueryString();
         public static string ToQueryString(this ContextQuery contextQuery)
         {
             var selectClause = string.Join(", ", contextQuery.Fields);
@@ -200,58 +200,51 @@ namespace Sam.FileTableFramework.Linq
 
         #region ToListAsync
         public static async Task<IEnumerable<FileEntity>> ToListAsync(this FtDbSet dbset)
-            => await ToListAsync(dbset.AsQueryable());
-        public static async Task<IEnumerable<FileEntity>> ToListAsync(this ContextQuery contextQuery) => await ToListAsync(contextQuery, p => new FileEntity()
-        {
-            stream_id = p.stream_id,
-            cached_file_size = p.cached_file_size,
-            creation_time = p.creation_time,
-            file_stream = p.file_stream,
-            is_archive = p.is_archive,
-            file_type = p.file_type,
-            is_directory = p.is_directory,
-            is_hidden = p.is_hidden,
-            is_offline = p.is_offline,
-            is_readonly = p.is_readonly,
-            is_system = p.is_system,
-            is_temporary = p.is_temporary,
-            last_access_time = p.last_access_time,
-            last_write_time = p.last_write_time,
-            name = p.name
-
-        });
+            => await dbset.AsQueryable().ToListAsync();
+        public static async Task<IEnumerable<FileEntity>> ToListAsync(this ContextQuery contextQuery)
+            => await contextQuery.ToListAsync(p => new FileEntity()
+            {
+                stream_id = p.stream_id,
+                cached_file_size = p.cached_file_size,
+                creation_time = p.creation_time,
+                file_stream = p.file_stream,
+                is_archive = p.is_archive,
+                file_type = p.file_type,
+                is_directory = p.is_directory,
+                is_hidden = p.is_hidden,
+                is_offline = p.is_offline,
+                is_readonly = p.is_readonly,
+                is_system = p.is_system,
+                is_temporary = p.is_temporary,
+                last_access_time = p.last_access_time,
+                last_write_time = p.last_write_time,
+                name = p.name
+            });
         public static async Task<IEnumerable<T>> ToListAsync<T>(this FtDbSet dbset, Expression<Func<FileEntity, T>> selector) where T : class
-            => await ToListAsync(dbset.AsQueryable(), selector);
+            => await dbset.AsQueryable().ToListAsync(selector);
         public static async Task<IEnumerable<T>> ToListAsync<T>(this ContextQuery contextQuery, Expression<Func<FileEntity, T>> selector) where T : class
         {
-            try
+            contextQuery.Select(selector);
+            using (var connection = new SqlConnection(contextQuery.ConnectionString))
             {
-                contextQuery.Select(selector);
-                using (var connection = new SqlConnection(contextQuery.ConnectionString))
-                {
-                    await connection.OpenAsync();
+                await connection.OpenAsync();
 
-                    string sqlQuery = ToQueryString(contextQuery);
-                    return await connection.GetList<T>(sqlQuery);
-                }
-            }
-            catch (Exception)
-            {
-                throw;
+                string sqlQuery = contextQuery.ToQueryString();
+                return await connection.GetList<T>(sqlQuery);
             }
         }
         #endregion
 
         #region CountAsync
         public static async Task<int> CountAsync(this FtDbSet dbset)
-            => await CountAsync(dbset.AsQueryable());
+            => await dbset.AsQueryable().CountAsync();
         public static async Task<int> CountAsync(this ContextQuery contextQuery)
         {
 
             using (var connection = new SqlConnection(contextQuery.ConnectionString))
             {
                 contextQuery.Fields = new List<string>() { "COUNT(stream_id)" };
-                string sqlQuery = ToQueryString(contextQuery);
+                string sqlQuery = contextQuery.ToQueryString();
                 await connection.OpenAsync();
 
                 return await connection.GetInt(sqlQuery);
@@ -262,47 +255,39 @@ namespace Sam.FileTableFramework.Linq
 
         #region FirstOrDefaultAsync
         public static async Task<FileEntity?> FirstOrDefaultAsync(this FtDbSet dbset)
-            => await FirstOrDefaultAsync(dbset.AsQueryable());
-        public static async Task<FileEntity?> FirstOrDefaultAsync(this ContextQuery contextQuery) => await FirstOrDefaultAsync(contextQuery, p => new FileEntity()
-        {
-            stream_id = p.stream_id,
-            cached_file_size = p.cached_file_size,
-            creation_time = p.creation_time,
-            file_stream = p.file_stream,
-            is_archive = p.is_archive,
-            file_type = p.file_type,
-            is_directory = p.is_directory,
-            is_hidden = p.is_hidden,
-            is_offline = p.is_offline,
-            is_readonly = p.is_readonly,
-            is_system = p.is_system,
-            is_temporary = p.is_temporary,
-            last_access_time = p.last_access_time,
-            last_write_time = p.last_write_time,
-            name = p.name
-
-        });
+            => await dbset.AsQueryable().FirstOrDefaultAsync();
+        public static async Task<FileEntity?> FirstOrDefaultAsync(this ContextQuery contextQuery)
+            => await contextQuery.FirstOrDefaultAsync(p => new FileEntity()
+            {
+                stream_id = p.stream_id,
+                cached_file_size = p.cached_file_size,
+                creation_time = p.creation_time,
+                file_stream = p.file_stream,
+                is_archive = p.is_archive,
+                file_type = p.file_type,
+                is_directory = p.is_directory,
+                is_hidden = p.is_hidden,
+                is_offline = p.is_offline,
+                is_readonly = p.is_readonly,
+                is_system = p.is_system,
+                is_temporary = p.is_temporary,
+                last_access_time = p.last_access_time,
+                last_write_time = p.last_write_time,
+                name = p.name
+            });
         public static async Task<T?> FirstOrDefaultAsync<T>(this FtDbSet dbset, Expression<Func<FileEntity, T>> selector) where T : class
-            => await FirstOrDefaultAsync<T>(dbset, selector);
+            => await dbset.FirstOrDefaultAsync<T>(selector);
         public static async Task<T?> FirstOrDefaultAsync<T>(this ContextQuery contextQuery, Expression<Func<FileEntity, T>> selector) where T : class
         {
-            try
+            contextQuery.Select(selector);
+
+            using (var connection = new SqlConnection(contextQuery.ConnectionString))
             {
-                contextQuery.Select(selector);
+                await connection.OpenAsync();
 
-                using (var connection = new SqlConnection(contextQuery.ConnectionString))
-                {
-                    await connection.OpenAsync();
+                string sqlQuery = contextQuery.ToQueryString().Insert(6, " TOP (1)");
 
-                    string sqlQuery = ToQueryString(contextQuery).Insert(6, " TOP (1)");
-
-
-                    return await connection.GetFirst<T>(sqlQuery);
-                }
-            }
-            catch (Exception)
-            {
-                throw;
+                return await connection.GetFirst<T>(sqlQuery);
             }
         }
         #endregion
