@@ -52,34 +52,46 @@ namespace Sam.FileTableFramework.Linq
                 throw new InvalidOperationException("Unsupported expression type for OrderBy.");
             }
         }
+        public static ContextQuery OrderBy(this FtDbSet dbset, string fieldName)
+            => OrderBy(dbset.AsQueryable(), fieldName);
+        public static ContextQuery OrderBy(this ContextQuery contextQuery, string fieldName)
+        {
+            contextQuery.OrderBy ??= new List<string>();
+
+            contextQuery.OrderBy.Add(fieldName);
+
+            return contextQuery;
+        }
+        #endregion
+
+        #region OrderByDescending
         public static ContextQuery OrderByDescending<T>(this FtDbSet dbset, Expression<Func<FileEntity, T>> keySelector)
             => dbset.AsQueryable().OrderByDescending(keySelector);
         public static ContextQuery OrderByDescending<T>(this ContextQuery contextQuery, Expression<Func<FileEntity, T>> keySelector)
         {
             if (keySelector.Body is MemberExpression memberExpr)
             {
-                return contextQuery.OrderBy(memberExpr.Member.Name, true);
+                return contextQuery.OrderByDescending(memberExpr.Member.Name);
             }
             else if (keySelector.Body is UnaryExpression unaryExpr && unaryExpr.Operand is MemberExpression unaryMemberExpr)
             {
-                return contextQuery.OrderBy(unaryMemberExpr.Member.Name, true);
+                return contextQuery.OrderByDescending(unaryMemberExpr.Member.Name);
             }
             else
             {
                 throw new InvalidOperationException("Unsupported expression type for OrderBy.");
             }
         }
-        public static ContextQuery OrderBy(this FtDbSet dbset, string fieldName, bool orderByDescending = false)
-            => OrderBy(dbset.AsQueryable(), fieldName, orderByDescending);
-        public static ContextQuery OrderBy(this ContextQuery contextQuery, string fieldName, bool orderByDescending = false)
+        public static ContextQuery OrderByDescending(this FtDbSet dbset, string fieldName)
+            => OrderByDescending(dbset.AsQueryable(), fieldName);
+        public static ContextQuery OrderByDescending(this ContextQuery contextQuery, string fieldName)
         {
             contextQuery.OrderBy ??= new List<string>();
 
-            contextQuery.OrderBy.Add(fieldName + (orderByDescending ? string.Empty : " DESC"));
+            contextQuery.OrderBy.Add(fieldName + " DESC");
 
             return contextQuery;
         }
-
         #endregion
 
         #region Where
