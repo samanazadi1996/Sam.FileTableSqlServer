@@ -4,7 +4,8 @@ using Sam.FileTableFramework.Linq;
 using System;
 
 var connectionStrings = "Data Source =.; Initial Catalog = db1; Integrated Security = true";
-var db = new DatabaseContext(new DatabaseOptions(connectionStrings));
+var db = new DatabaseContext();
+db.UseSqlServer(connectionStrings);
 db.Migrate();
 
 var result = await db.Table1.CountAsync();

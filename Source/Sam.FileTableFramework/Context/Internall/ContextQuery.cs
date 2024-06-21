@@ -2,14 +2,20 @@
 
 namespace Sam.FileTableFramework.Context.Internall
 {
-    internal class ContextQuery
+    public class ContextQuery
     {
-        public string[]? Fields { get; set; }
-        public int? Skip { get; set; }
-        public int? Take { get; set; }
-        public List<string>? Where { get; set; }
-        public List<string>? OrderBy { get; set; }
-        public bool? OrderByDescending { get; set; }
-
+        internal ContextQuery(FtDbSet ftDbSet)
+        {
+            TableName = ftDbSet.TableName!;
+            ConnectionString = ftDbSet.ConnectionString!;
+        }
+        internal string TableName { get; set; }
+        internal string ConnectionString { get; set; }
+        internal string[]? Fields { get; set; }
+        internal int? Skip { get; set; }
+        internal int? Take { get; set; }
+        internal List<string>? Where { get; set; }
+        internal List<string>? OrderBy { get; set; }
+        internal bool? OrderByDescending { get; set; }
     }
 }

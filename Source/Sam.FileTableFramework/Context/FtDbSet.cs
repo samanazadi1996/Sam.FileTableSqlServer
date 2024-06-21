@@ -1,11 +1,8 @@
-using Sam.FileTableFramework.Context.Internall;
-
 namespace Sam.FileTableFramework.Context
 {
     public class FtDbSet
     {
-        public string? TableName { get; private set; }
-        public string? ConnectionString { get; private set; }
-        internal ContextQuery? Query { get; set; }
+        public string? TableName { get; internal set; }
+        public string? ConnectionString { get; internal set; }
     }
 }

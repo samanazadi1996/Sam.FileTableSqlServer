@@ -14,10 +14,12 @@ namespace Sam.EndPoint.WebApi.Controllers
         [HttpGet("GetPaged/{page}/{pageCount}")]
         public async Task<IActionResult> GetPaged(int page, int pageCount)
         {
+            var skip = (page - 1) * pageCount;
+
             var query = databaseContext.Table1;
 
             var result = await query
-                .Skip(page)
+                .Skip(skip)
                 .Take(pageCount)
                 .OrderBy(p => p.name)
                 .ToListAsync(p => new FileEntityDto()
@@ -51,7 +53,8 @@ namespace Sam.EndPoint.WebApi.Controllers
         [HttpGet("Count")]
         public async Task<IActionResult> Count()
         {
-            return Ok(await databaseContext.Table1.CountAsync());
+            var query = databaseContext.Table1;
+            return Ok(await query.CountAsync());
         }
 
         [HttpGet("Download/{name}")]
