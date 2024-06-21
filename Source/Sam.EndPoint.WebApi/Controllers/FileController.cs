@@ -105,6 +105,7 @@ namespace Sam.EndPoint.WebApi.Controllers
                 .OrderBy(p => p.name)
                 .OrderBy(p => p.is_archive)
                 .OrderByDescending(p => p.stream_id)
+                .OrderBy(p => p.creation_time)
                 .Select(p => new FileEntityDto()
                 {
                     Name = p.name,
