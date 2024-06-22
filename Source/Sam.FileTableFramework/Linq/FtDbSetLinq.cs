@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -255,14 +256,19 @@ namespace Sam.FileTableFramework.Linq
 
             using (var connection = new SqlConnection(contextQuery.ConnectionString))
             {
+                var temp = contextQuery.Fields;
+
                 contextQuery.Fields = new List<string>() { "COUNT(stream_id)" };
+
                 string sqlQuery = contextQuery.ToQueryString();
+
+                contextQuery.Fields = temp;
+
                 await connection.OpenAsync();
 
                 return await connection.GetInt(sqlQuery);
             }
         }
-
         #endregion
 
         #region FirstOrDefaultAsync
