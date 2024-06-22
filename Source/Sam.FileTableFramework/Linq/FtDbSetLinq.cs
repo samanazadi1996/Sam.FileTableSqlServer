@@ -204,7 +204,7 @@ namespace Sam.FileTableFramework.Linq
             var skipClause = contextQuery.Skip.HasValue ? $"OFFSET {contextQuery.Skip.Value} ROWS" : string.Empty;
             var takeClause = contextQuery.Take.HasValue ? $"FETCH NEXT {contextQuery.Take.Value} ROWS ONLY" : string.Empty;
 
-            var queryString = $"SELECT {selectClause} {fromClause} {whereClause} {orderByClause} {skipClause} {takeClause};";
+            var queryString = $"SELECT {selectClause} {fromClause} {whereClause} {orderByClause} {skipClause} {takeClause}";
 
             return queryString.Trim();
         }

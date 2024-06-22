@@ -71,7 +71,7 @@ namespace Sam.EndPoint.WebApi.Controllers
         [HttpPost("Upload")]
         public async Task<IActionResult> Upload(IFormFile file)
         {
-            var fileName = Guid.NewGuid() + file.FileName[file.FileName.LastIndexOf(".", StringComparison.Ordinal)..];
+            var fileName = Guid.NewGuid() + file.FileName[file.FileName.LastIndexOf('.')..];
             var stream = file.OpenReadStream();
 
             await databaseContext.Table1.CreateAsync(fileName, stream);

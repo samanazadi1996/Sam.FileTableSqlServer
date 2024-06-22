@@ -12,22 +12,22 @@ In today's digital world, effective file management is crucial for individuals a
    - .NET CLI
 
         ``` sh
-        dotnet add package Sam.FileTableFramework --version 1.0.1
+        dotnet add package Sam.FileTableFramework --version 2.0.0
         ```
    - Package Manager
 
         ``` sh
-        NuGet\Install-Package Sam.FileTableFramework -Version 1.0.1
+        NuGet\Install-Package Sam.FileTableFramework -Version 2.0.0
         ```
 
    - Package Reference
         ``` xml
-        <PackageReference Include="Sam.FileTableFramework" Version="1.0.1" />
+        <PackageReference Include="Sam.FileTableFramework" Version="2.0.0" />
         ```
     
     - Paket CLI
         ``` sh
-        paket add Sam.FileTableFramework --version 1.0.1
+        paket add Sam.FileTableFramework --version 2.0.0
         ```
 
 3. Create your DbContext by inheriting from FileTableDbContext. Then, define a FtDbSet property for your tables.
@@ -67,6 +67,8 @@ In today's digital world, effective file management is crucial for individuals a
 6. Now you can inject DatabaseContext in your classes and use your tables, for example, see the source code below
     ``` c#
     using Microsoft.AspNetCore.Mvc;
+    using Sam.EndPoint.WebApi.Models;
+    using Sam.FileTableFramework.Linq;
     using Sam.Persistence;
     using System.Net.Mime;
 
@@ -80,49 +82,138 @@ In today's digital world, effective file management is crucial for individuals a
             [HttpGet("GetPaged/{page}/{pageCount}")]
             public async Task<IActionResult> GetPaged(int page, int pageCount)
             {
-                return Ok(await databaseContext.Table1.GetPagedListAsync(page, pageCount));
+                var skip = (page - 1) * pageCount;
+
+                var query = databaseContext.Table1;
+
+                var result = await query
+                    .Skip(skip)
+                    .Take(pageCount)
+                    .OrderBy(p => p.name)
+                    .ToListAsync(p => new FileEntityDto()
+                    {
+                        Name = p.name,
+                        Size = p.cached_file_size,
+                        Id = p.stream_id,
+                        Type = p.file_type
+                    });
+
+                return Ok(result);
             }
 
             [HttpGet("GetAll")]
             public async Task<IActionResult> GetAll()
             {
-                return Ok(await databaseContext.Table1.GetAllAsync());
+                var query = databaseContext.Table1;
+
+                var result = await query
+                    .ToListAsync(p => new FileEntityDto()
+                    {
+                        Name = p.name,
+                        Size = p.cached_file_size,
+                        Id = p.stream_id,
+                        Type = p.file_type
+                    });
+
+                return Ok(result);
             }
 
             [HttpGet("Count")]
             public async Task<IActionResult> Count()
             {
-                return Ok(await databaseContext.Table1.Count());
+                var query = databaseContext.Table1;
+                return Ok(await query.CountAsync());
             }
 
             [HttpGet("Download/{name}")]
             public async Task<IActionResult> Download(string name)
             {
-                var result = await databaseContext.Table1.FindByNameAsync(name);
+                var entity = await databaseContext.Table1.Where($"name = '{name}'").FirstOrDefaultAsync();
 
-                if (result is null)
-                    return NotFound(name);
+                if (entity is null)
+                    return NotFound(nameof(NotFound));
 
-                return File(result.file_stream!, MediaTypeNames.Application.Octet, result.name);
+                return File(entity.file_stream!, MediaTypeNames.Application.Octet, entity.name);
             }
 
             [HttpPost("Upload")]
             public async Task<IActionResult> Upload(IFormFile file)
             {
-                var fileName = Guid.NewGuid() + file.FileName[file.FileName.LastIndexOf(".", StringComparison.Ordinal)..];
+                var fileName = Guid.NewGuid() + file.FileName[file.FileName.LastIndexOf('.')..];
                 var stream = file.OpenReadStream();
-                return Ok(await databaseContext.Table1.CreateAsync(fileName, stream));
+
+                await databaseContext.Table1.CreateAsync(fileName, stream);
+
+                return Ok(fileName);
             }
 
             [HttpDelete("Delete")]
             public async Task<IActionResult> Delete(string name)
             {
-                return Ok(await databaseContext.Table1.RemoveByNameAsync(name));
+                var entity = await databaseContext.Table1.Where($"name = '{name}'").FirstOrDefaultAsync();
+
+                if (entity is null)
+                    return NotFound(nameof(NotFound));
+
+                var temp = await databaseContext.Table1.RemoveAsync(entity);
+
+                return Ok(temp);
             }
+
+            [HttpGet("TestQueryString")]
+            public async Task<IActionResult> TestQueryString()
+            {
+
+                var query = databaseContext.Table1;
+
+                var result = query
+                    .Take(3)
+                    .Skip(2)
+                    .Where("name = 'saman'")
+                    .OrderBy(p => p.name)
+                    .OrderBy(p => p.is_archive)
+                    .OrderByDescending(p => p.stream_id)
+                    .OrderBy(p => p.creation_time)
+                    .Select(p => new FileEntityDto()
+                    {
+                        Name = p.name,
+                        Size = p.cached_file_size,
+                        Id = p.stream_id,
+                        Type = p.file_type
+                    });
+
+                return Ok(new
+                {
+                    Query = result.ToQueryString(),
+                    Data = await result.ToListAsync(p => new FileEntityDto()
+                    {
+                        Name = p.name,
+                        Size = p.cached_file_size,
+                        Id = p.stream_id,
+                        Type = p.file_type
+                    })
+                });
+            }
+
+        }
+
+        public class FileEntityDto
+        {
+            public Guid Id { get; set; }
+            public string? Name { get; set; }
+            public string? Type { get; set; }
+            public long Size { get; set; }
         }
     }
     ```
+
 # Conclusion
 
 In this article, we delved into creating a file management application using ASP.NET Core and SQL Server FileTable. This application provides functionalities for organizing and managing files in a web environment. Leveraging modern technologies and tools like FileTable, we were able to build a secure, reliable, and high-performance application.
 
+
+# Support
+If you are having problems, please let me know by [raising a new issue](https://github.com/samanazadi1996/Sam.FileTableSqlServer/issues).
+
+# License
+This project is licensed with the [MIT license](https://github.com/samanazadi1996/Sam.FileTableSqlServer?tab=MIT-1-ov-file#readme).

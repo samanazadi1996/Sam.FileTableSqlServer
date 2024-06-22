@@ -12,9 +12,9 @@ namespace Sam.FileTableFramework.Context.Internall
         internal string TableName { get; set; }
         internal string ConnectionString { get; set; }
         internal List<string>? Fields { get; set; }
-        internal int? Skip { get; set; }
-        internal int? Take { get; set; }
         internal List<string>? Where { get; set; }
         internal List<string>? OrderBy { get; set; }
+        internal int? Skip { get; set; }
+        internal int? Take { get; set; }
     }
 }
