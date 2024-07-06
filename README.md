@@ -46,7 +46,7 @@ In today's digital world, effective file management is crucial for individuals a
     ```
     You can have your advanced FtDbSet, for this, refer to [this link](./Documents/CustomFtDbSet.md)
 
-4. Register your DatabaseContext class in Startup
+4. Register your DatabaseContext class in Program.cs
     ``` c#
     // ...
     builder.Services.AddFileTableDBContext<DatabaseContext>(o =>
