@@ -1,4 +1,4 @@
-﻿using Sam.FileTableFramework.Extentions;
+﻿using Sam.FileTableFramework.Extensions;
 using Sam.FileTableFramework.Linq;
 using Sam.Persistence;
 using System;

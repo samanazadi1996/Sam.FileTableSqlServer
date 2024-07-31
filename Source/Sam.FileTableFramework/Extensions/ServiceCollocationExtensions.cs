@@ -2,9 +2,9 @@
 using Sam.FileTableFramework.Context;
 using System;
 
-namespace Sam.FileTableFramework.Extentions
+namespace Sam.FileTableFramework.Extensions
 {
-    public static class ServiceCollocationExtentions
+    public static class ServiceCollocationExtensions
     {
         public static IServiceCollection AddFileTableDBContext<TData>(this IServiceCollection services, Action<DatabaseOptions> configureOptions) where TData : FileTableDBContext, new()
 

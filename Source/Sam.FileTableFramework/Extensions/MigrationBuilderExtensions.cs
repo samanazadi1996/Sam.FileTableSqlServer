@@ -2,7 +2,7 @@
 using System.Data.SqlClient;
 using System.Linq;
 
-namespace Sam.FileTableFramework.Extentions
+namespace Sam.FileTableFramework.Extensions
 {
     public static class MigrationBuilderExtensions
     {
@@ -13,15 +13,13 @@ namespace Sam.FileTableFramework.Extentions
         }
         public static void GenerateTables(this FileTableDBContext context)
         {
-            using (var connection = new SqlConnection(context.options.ConnectionString))
+            using var connection = new SqlConnection(context.options.ConnectionString);
+            connection.Open();
+            foreach (var item in context.GetType().GetProperties().Where(p => typeof(FtDbSet).IsAssignableFrom(p.PropertyType)))
             {
-                connection.Open();
-                foreach (var item in context.GetType().GetProperties().Where(p => typeof(FtDbSet).IsAssignableFrom(p.PropertyType)))
-                {
-                    var existTable = TableExists(connection, item.Name);
-                    if (!existTable)
-                        CreateTable(connection, item.Name);
-                }
+                var existTable = TableExists(connection, item.Name);
+                if (!existTable)
+                    CreateTable(connection, item.Name);
             }
         }
 
@@ -29,10 +27,8 @@ namespace Sam.FileTableFramework.Extentions
         private static void CreateTable(SqlConnection connection, string tableName)
         {
             var sqlQuery = $"CREATE TABLE [{tableName}] AS FILETABLE";
-            using (var command = new SqlCommand(sqlQuery, connection))
-            {
-                command.ExecuteNonQuery();
-            }
+            using var command = new SqlCommand(sqlQuery, connection);
+            command.ExecuteNonQuery();
         }
 
         private static bool TableExists(SqlConnection connection, string tableName)

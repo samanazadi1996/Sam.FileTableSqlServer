@@ -1,4 +1,4 @@
-using Sam.FileTableFramework.Extentions;
+using Sam.FileTableFramework.Extensions;
 using Sam.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);

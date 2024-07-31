@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Sam.FileTableFramework.Context.Internall
+namespace Sam.FileTableFramework.Context.Internal
 {
     public class ContextQuery
     {

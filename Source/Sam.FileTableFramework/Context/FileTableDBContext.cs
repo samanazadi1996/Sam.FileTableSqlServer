@@ -1,4 +1,4 @@
-﻿using Sam.FileTableFramework.Extentions;
+﻿using Sam.FileTableFramework.Extensions;
 
 namespace Sam.FileTableFramework.Context
 {

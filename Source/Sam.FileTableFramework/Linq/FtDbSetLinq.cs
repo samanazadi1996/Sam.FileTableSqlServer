@@ -1,7 +1,7 @@
 ﻿using Sam.FileTableFramework.Context;
-using Sam.FileTableFramework.Context.Internall;
+using Sam.FileTableFramework.Context.Internal;
 using Sam.FileTableFramework.Entities;
-using Sam.FileTableFramework.Extentions;
+using Sam.FileTableFramework.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;

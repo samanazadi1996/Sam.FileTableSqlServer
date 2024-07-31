@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
-namespace Sam.FileTableFramework.Extentions
+namespace Sam.FileTableFramework.Extensions
 {
     public static class SqlQueryReaderExtensions
     {

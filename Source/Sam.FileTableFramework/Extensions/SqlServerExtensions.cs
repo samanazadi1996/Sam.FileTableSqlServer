@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace Sam.FileTableFramework.Extentions
+namespace Sam.FileTableFramework.Extensions
 {
     public static class SqlServerExtensions
     {
