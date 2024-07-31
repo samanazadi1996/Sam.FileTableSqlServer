@@ -7,10 +7,11 @@
 		<PackageProjectUrl>https://github.com/samanazadi1996/Sam.FileTableSqlServer</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/samanazadi1996/Sam.FileTableSqlServer</RepositoryUrl>
 		<RepositoryType>github</RepositoryType>
-		<VersionPrefix>2.0.0</VersionPrefix>
+		<VersionPrefix>2.1.0</VersionPrefix>
 		<PackageTags>sql-server-filetable;filetable;csharp;dotnet</PackageTags>
 		<Authors>Saman Azadi</Authors>
 		<PackageIcon>PackageIcon.png</PackageIcon>
+		<Description>This framework aids ASP.NET Core developers in seamlessly storing and managing files directly in SQL Server FileTables.</Description>
 	</PropertyGroup>
 
 	<ItemGroup>
