@@ -4,7 +4,7 @@ using Sam.Persistence;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddFileTableDBContext<DatabaseContext>(o =>
+builder.Services.AddFileTableDbContext<DatabaseContext>(o =>
     o.ConnectionString = builder.Configuration.GetConnectionString("DB_1"));
 
 builder.Services.AddControllers();

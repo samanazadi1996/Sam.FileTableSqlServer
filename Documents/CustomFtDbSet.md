@@ -23,21 +23,20 @@ namespace Sam.Persistence
 
     public class AdvancedFtDbSet : FtDbSet
     {
-        public override Task<int> Count()
+        public virtual async Task<int> GetCount()
         {
-            return base.Count();
+            return await this.CountAsync();
         }
 
         public virtual async Task<FileEntity?> GetByStreamId(Guid streamId)
         {
-            using (var connection = new SqlConnection(ConnectionString))
-            {
-                await connection.OpenAsync();
+            await using var connection = new SqlConnection(ConnectionString);
 
-                string sqlQuery = $"SELECT TOP 1 * FROM [{TableName}] WHERE [stream_id] = '{streamId}'";
+            await connection.OpenAsync();
 
-                return await connection.GetFirst<FileEntity>(sqlQuery);
-            }
+            var sqlQuery = $"SELECT TOP 1 * FROM [{TableName}] WHERE [stream_id] = '{streamId}'";
+
+            return await connection.GetFirst<FileEntity>(sqlQuery);
         }
     }
 }

@@ -6,11 +6,11 @@ namespace Sam.FileTableFramework.Extensions
 {
     public static class SqlServerExtensions
     {
-        public static void UseSqlServer<T>(this T context, string connectionString) where T : FileTableDBContext
+        public static void UseSqlServer<T>(this T context, string connectionString) where T : FileTableDbContext
             => context.UseSqlServer(new DatabaseOptions() { ConnectionString = connectionString });
-        public static void UseSqlServer<T>(this T context, DatabaseOptions options) where T : FileTableDBContext
+        public static void UseSqlServer<T>(this T context, DatabaseOptions options) where T : FileTableDbContext
         {
-            context.options = options;
+            context.Options = options;
 
             var props = context.GetType().GetProperties().Where(p => typeof(FtDbSet).IsAssignableFrom(p.PropertyType));
 
@@ -18,10 +18,10 @@ namespace Sam.FileTableFramework.Extensions
             {
                 var ftDbSetInstance = Activator.CreateInstance(item.PropertyType);
 
-                typeof(FtDbSet).GetProperty("TableName").SetValue(ftDbSetInstance, item.Name);
-                typeof(FtDbSet).GetProperty("ConnectionString").SetValue(ftDbSetInstance, options.ConnectionString);
+                typeof(FtDbSet).GetProperty("TableName")?.SetValue(ftDbSetInstance, item.Name);
+                typeof(FtDbSet).GetProperty("ConnectionString")?.SetValue(ftDbSetInstance, options.ConnectionString);
 
-                context.GetType().GetProperty(item.Name).SetValue(context, ftDbSetInstance);
+                context.GetType().GetProperty(item.Name)?.SetValue(context, ftDbSetInstance);
             }
 
         }

@@ -6,7 +6,7 @@ namespace Sam.FileTableFramework.Extensions
 {
     public static class ServiceCollocationExtensions
     {
-        public static IServiceCollection AddFileTableDBContext<TData>(this IServiceCollection services, Action<DatabaseOptions> configureOptions) where TData : FileTableDBContext, new()
+        public static IServiceCollection AddFileTableDbContext<TData>(this IServiceCollection services, Action<DatabaseOptions> configureOptions) where TData : FileTableDbContext, new()
 
         {
             DatabaseOptions options = new DatabaseOptions();

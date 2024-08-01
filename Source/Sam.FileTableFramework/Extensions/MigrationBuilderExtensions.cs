@@ -6,14 +6,14 @@ namespace Sam.FileTableFramework.Extensions
 {
     public static class MigrationBuilderExtensions
     {
-        public static void Migrate(this FileTableDBContext context)
+        public static void Migrate(this FileTableDbContext context)
         {
-            GenerateDataBase(context.options.ConnectionString!);
+            GenerateDataBase(context.Options.ConnectionString!);
             GenerateTables(context);
         }
-        public static void GenerateTables(this FileTableDBContext context)
+        public static void GenerateTables(this FileTableDbContext context)
         {
-            using var connection = new SqlConnection(context.options.ConnectionString);
+            using var connection = new SqlConnection(context.Options.ConnectionString);
             connection.Open();
             foreach (var item in context.GetType().GetProperties().Where(p => typeof(FtDbSet).IsAssignableFrom(p.PropertyType)))
             {

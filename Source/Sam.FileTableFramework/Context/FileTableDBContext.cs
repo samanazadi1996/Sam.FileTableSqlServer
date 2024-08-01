@@ -2,8 +2,8 @@
 
 namespace Sam.FileTableFramework.Context
 {
-    public abstract class FileTableDBContext
+    public abstract class FileTableDbContext
     {
-        internal DatabaseOptions options { get; set; }
+        internal DatabaseOptions Options { get; set; }
     }
 }

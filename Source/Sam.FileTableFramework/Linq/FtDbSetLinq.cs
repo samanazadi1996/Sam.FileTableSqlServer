@@ -43,7 +43,7 @@ namespace Sam.FileTableFramework.Linq
             {
                 return contextQuery.OrderBy(memberExpr.Member.Name);
             }
-            else if (keySelector.Body is UnaryExpression unaryExpr && unaryExpr.Operand is MemberExpression unaryMemberExpr)
+            else if (keySelector.Body is UnaryExpression { Operand: MemberExpression unaryMemberExpr })
             {
                 return contextQuery.OrderBy(unaryMemberExpr.Member.Name);
             }
@@ -73,7 +73,7 @@ namespace Sam.FileTableFramework.Linq
             {
                 return contextQuery.OrderByDescending(memberExpr.Member.Name);
             }
-            else if (keySelector.Body is UnaryExpression unaryExpr && unaryExpr.Operand is MemberExpression unaryMemberExpr)
+            else if (keySelector.Body is UnaryExpression { Operand: MemberExpression unaryMemberExpr })
             {
                 return contextQuery.OrderByDescending(unaryMemberExpr.Member.Name);
             }
@@ -135,7 +135,7 @@ namespace Sam.FileTableFramework.Linq
                                 var alias = newExpr.Members[i].Name;
                                 ProcessMemberExpression(memberExpr, alias);
                             }
-                            else if (newExpr.Arguments[i] is UnaryExpression unaryExpr && unaryExpr.Operand is MemberExpression unaryMemberExpr)
+                            else if (newExpr.Arguments[i] is UnaryExpression { Operand: MemberExpression unaryMemberExpr })
                             {
                                 var alias = newExpr.Members[i].Name;
                                 ProcessMemberExpression(unaryMemberExpr, alias);
@@ -151,19 +151,19 @@ namespace Sam.FileTableFramework.Linq
                         ProcessMemberExpression(memberExpr);
                         break;
 
-                    case UnaryExpression unaryExpr when unaryExpr.Operand is MemberExpression unaryMemberExpr:
+                    case UnaryExpression { Operand: MemberExpression unaryMemberExpr }:
                         ProcessMemberExpression(unaryMemberExpr);
                         break;
 
                     case MemberInitExpression memberInitExpr:
                         foreach (var binding in memberInitExpr.Bindings)
                         {
-                            if (binding is MemberAssignment assignment && assignment.Expression is MemberExpression assignmentMemberExpr)
+                            if (binding is MemberAssignment { Expression: MemberExpression assignmentMemberExpr })
                             {
                                 var alias = binding.Member.Name;
                                 ProcessMemberExpression(assignmentMemberExpr, alias);
                             }
-                            else if (binding is MemberAssignment assignmentUnary && assignmentUnary.Expression is UnaryExpression unaryAssignmentExpr && unaryAssignmentExpr.Operand is MemberExpression unaryAssignmentMemberExpr)
+                            else if (binding is MemberAssignment { Expression: UnaryExpression { Operand: MemberExpression unaryAssignmentMemberExpr } })
                             {
                                 var alias = binding.Member.Name;
                                 ProcessMemberExpression(unaryAssignmentMemberExpr, alias);

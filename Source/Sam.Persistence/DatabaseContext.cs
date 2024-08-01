@@ -2,7 +2,7 @@
 
 namespace Sam.Persistence
 {
-    public class DatabaseContext : FileTableDBContext
+    public class DatabaseContext : FileTableDbContext
     {
         public FtDbSet Table1 { get; set; }
         public FtDbSet Table2 { get; set; }
