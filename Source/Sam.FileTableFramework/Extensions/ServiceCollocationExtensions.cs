@@ -7,12 +7,11 @@ namespace Sam.FileTableFramework.Extensions
     public static class ServiceCollocationExtensions
     {
         public static IServiceCollection AddFileTableDbContext<TData>(this IServiceCollection services, Action<DatabaseOptions> configureOptions) where TData : FileTableDbContext, new()
-
         {
-            DatabaseOptions options = new DatabaseOptions();
+            var options = new DatabaseOptions();
             configureOptions(options);
 
-            TData instance = new TData();
+            var instance = new TData();
             instance.UseSqlServer(options!);
 
             services.AddSingleton(instance);

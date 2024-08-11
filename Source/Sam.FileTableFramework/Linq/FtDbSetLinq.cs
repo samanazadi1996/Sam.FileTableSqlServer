@@ -14,8 +14,8 @@ namespace Sam.FileTableFramework.Linq
     public static class FtDbSetLinq
     {
         #region Skip
-        public static ContextQuery Skip(this FtDbSet dbset, int skip)
-            => dbset.AsQueryable().Skip(skip);
+        public static ContextQuery Skip(this FtDbSet dbSet, int skip)
+            => dbSet.AsQueryable().Skip(skip);
         public static ContextQuery Skip(this ContextQuery contextQuery, int skip)
         {
             contextQuery.Skip = skip;
@@ -24,8 +24,8 @@ namespace Sam.FileTableFramework.Linq
         #endregion
 
         #region Take
-        public static ContextQuery Take(this FtDbSet dbset, int take)
-            => dbset.AsQueryable().Take(take);
+        public static ContextQuery Take(this FtDbSet dbSet, int take)
+            => dbSet.AsQueryable().Take(take);
         public static ContextQuery Take(this ContextQuery contextQuery, int take)
         {
             contextQuery.Take = take;
@@ -34,8 +34,8 @@ namespace Sam.FileTableFramework.Linq
         #endregion
 
         #region OrderBy
-        public static ContextQuery OrderBy<T>(this FtDbSet dbset, Expression<Func<FileEntity, T>> keySelector)
-            => dbset.AsQueryable().OrderBy(keySelector);
+        public static ContextQuery OrderBy<T>(this FtDbSet dbSet, Expression<Func<FileEntity, T>> keySelector)
+            => dbSet.AsQueryable().OrderBy(keySelector);
         public static ContextQuery OrderBy<T>(this ContextQuery contextQuery, Expression<Func<FileEntity, T>> keySelector)
         {
 
@@ -52,8 +52,8 @@ namespace Sam.FileTableFramework.Linq
                 throw new InvalidOperationException("Unsupported expression type for OrderBy.");
             }
         }
-        public static ContextQuery OrderBy(this FtDbSet dbset, string fieldName)
-            => OrderBy(dbset.AsQueryable(), fieldName);
+        public static ContextQuery OrderBy(this FtDbSet dbSet, string fieldName)
+            => OrderBy(dbSet.AsQueryable(), fieldName);
         public static ContextQuery OrderBy(this ContextQuery contextQuery, string fieldName)
         {
             contextQuery.OrderBy ??= new List<string>();
@@ -65,8 +65,8 @@ namespace Sam.FileTableFramework.Linq
         #endregion
 
         #region OrderByDescending
-        public static ContextQuery OrderByDescending<T>(this FtDbSet dbset, Expression<Func<FileEntity, T>> keySelector)
-            => dbset.AsQueryable().OrderByDescending(keySelector);
+        public static ContextQuery OrderByDescending<T>(this FtDbSet dbSet, Expression<Func<FileEntity, T>> keySelector)
+            => dbSet.AsQueryable().OrderByDescending(keySelector);
         public static ContextQuery OrderByDescending<T>(this ContextQuery contextQuery, Expression<Func<FileEntity, T>> keySelector)
         {
             if (keySelector.Body is MemberExpression memberExpr)
@@ -82,8 +82,8 @@ namespace Sam.FileTableFramework.Linq
                 throw new InvalidOperationException("Unsupported expression type for OrderBy.");
             }
         }
-        public static ContextQuery OrderByDescending(this FtDbSet dbset, string fieldName)
-            => OrderByDescending(dbset.AsQueryable(), fieldName);
+        public static ContextQuery OrderByDescending(this FtDbSet dbSet, string fieldName)
+            => OrderByDescending(dbSet.AsQueryable(), fieldName);
         public static ContextQuery OrderByDescending(this ContextQuery contextQuery, string fieldName)
         {
             contextQuery.OrderBy ??= new List<string>();
@@ -95,8 +95,8 @@ namespace Sam.FileTableFramework.Linq
         #endregion
 
         #region Where
-        public static ContextQuery Where(this FtDbSet dbset, params string[] whereClause)
-            => dbset.AsQueryable().Where(whereClause);
+        public static ContextQuery Where(this FtDbSet dbSet, params string[] whereClause)
+            => dbSet.AsQueryable().Where(whereClause);
         public static ContextQuery Where(this ContextQuery contextQuery, params string[] whereClause)
         {
             if (whereClause != null)
@@ -110,8 +110,8 @@ namespace Sam.FileTableFramework.Linq
         #endregion
 
         #region Select
-        public static ContextQuery Select<T>(this FtDbSet dbset, Expression<Func<FileEntity, T>> selector)
-            => dbset.AsQueryable().Select(selector);
+        public static ContextQuery Select<T>(this FtDbSet dbSet, Expression<Func<FileEntity, T>> selector)
+            => dbSet.AsQueryable().Select(selector);
         public static ContextQuery Select<T>(this ContextQuery contextQuery, Expression<Func<FileEntity, T>> selector)
         {
             var selectList = new List<string>();
@@ -190,10 +190,10 @@ namespace Sam.FileTableFramework.Linq
         #endregion
 
         #region General
-        public static ContextQuery AsQueryable(this FtDbSet dbset)
-            => new ContextQuery(dbset);
-        public static string ToQueryString(this FtDbSet dbset)
-            => dbset.AsQueryable().ToQueryString();
+        public static ContextQuery AsQueryable(this FtDbSet dbSet)
+            => new ContextQuery(dbSet);
+        public static string ToQueryString(this FtDbSet dbSet)
+            => dbSet.AsQueryable().ToQueryString();
         public static string ToQueryString(this ContextQuery contextQuery)
         {
             var selectClause = string.Join(", ", contextQuery.Fields);
@@ -211,8 +211,8 @@ namespace Sam.FileTableFramework.Linq
         #endregion
 
         #region ToListAsync
-        public static async Task<IEnumerable<FileEntity>> ToListAsync(this FtDbSet dbset)
-            => await dbset.AsQueryable().ToListAsync();
+        public static async Task<IEnumerable<FileEntity>> ToListAsync(this FtDbSet dbSet)
+            => await dbSet.AsQueryable().ToListAsync();
         public static async Task<IEnumerable<FileEntity>> ToListAsync(this ContextQuery contextQuery)
             => await contextQuery.ToListAsync(p => new FileEntity()
             {
@@ -232,8 +232,8 @@ namespace Sam.FileTableFramework.Linq
                 last_write_time = p.last_write_time,
                 name = p.name
             });
-        public static async Task<IEnumerable<T>> ToListAsync<T>(this FtDbSet dbset, Expression<Func<FileEntity, T>> selector) where T : class
-            => await dbset.AsQueryable().ToListAsync(selector);
+        public static async Task<IEnumerable<T>> ToListAsync<T>(this FtDbSet dbSet, Expression<Func<FileEntity, T>> selector) where T : class
+            => await dbSet.AsQueryable().ToListAsync(selector);
         public static async Task<IEnumerable<T>> ToListAsync<T>(this ContextQuery contextQuery, Expression<Func<FileEntity, T>> selector) where T : class
         {
             contextQuery.Select(selector);
@@ -248,8 +248,8 @@ namespace Sam.FileTableFramework.Linq
         #endregion
 
         #region CountAsync
-        public static async Task<int> CountAsync(this FtDbSet dbset)
-            => await dbset.AsQueryable().CountAsync();
+        public static async Task<int> CountAsync(this FtDbSet dbSet)
+            => await dbSet.AsQueryable().CountAsync();
         public static async Task<int> CountAsync(this ContextQuery contextQuery)
         {
 
@@ -271,8 +271,8 @@ namespace Sam.FileTableFramework.Linq
         #endregion
 
         #region FirstOrDefaultAsync
-        public static async Task<FileEntity?> FirstOrDefaultAsync(this FtDbSet dbset)
-            => await dbset.AsQueryable().FirstOrDefaultAsync();
+        public static async Task<FileEntity?> FirstOrDefaultAsync(this FtDbSet dbSet)
+            => await dbSet.AsQueryable().FirstOrDefaultAsync();
         public static async Task<FileEntity?> FirstOrDefaultAsync(this ContextQuery contextQuery)
             => await contextQuery.FirstOrDefaultAsync(p => new FileEntity()
             {
@@ -292,8 +292,8 @@ namespace Sam.FileTableFramework.Linq
                 last_write_time = p.last_write_time,
                 name = p.name
             });
-        public static async Task<T?> FirstOrDefaultAsync<T>(this FtDbSet dbset, Expression<Func<FileEntity, T>> selector) where T : class
-            => await dbset.FirstOrDefaultAsync<T>(selector);
+        public static async Task<T?> FirstOrDefaultAsync<T>(this FtDbSet dbSet, Expression<Func<FileEntity, T>> selector) where T : class
+            => await dbSet.FirstOrDefaultAsync<T>(selector);
         public static async Task<T?> FirstOrDefaultAsync<T>(this ContextQuery contextQuery, Expression<Func<FileEntity, T>> selector) where T : class
         {
             contextQuery.Select(selector);
@@ -310,15 +310,15 @@ namespace Sam.FileTableFramework.Linq
         #endregion
 
         #region CreateAsync
-        public static async Task<string> CreateAsync(this FtDbSet dbset, string fileName, Stream stream)
+        public static async Task<string> CreateAsync(this FtDbSet dbSet, string fileName, Stream stream)
         {
-            using (var connection = new SqlConnection(dbset.ConnectionString))
+            using (var connection = new SqlConnection(dbSet.ConnectionString))
             {
                 await connection.OpenAsync();
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = $"INSERT INTO {dbset.TableName} ([name],[file_stream]) VALUES ('{fileName}',@fs)";
+                    command.CommandText = $"INSERT INTO {dbSet.TableName} ([name],[file_stream]) VALUES ('{fileName}',@fs)";
                     command.Parameters.AddWithValue("@fs", stream);
 
                     await command.ExecuteNonQueryAsync();
@@ -330,11 +330,11 @@ namespace Sam.FileTableFramework.Linq
         #endregion
 
         #region RemoveAsync
-        public static async Task<int> RemoveAsync(this FtDbSet dbset, FileEntity entity)
+        public static async Task<int> RemoveAsync(this FtDbSet dbSet, FileEntity entity)
         {
-            using (var connection = new SqlConnection(dbset.ConnectionString))
+            using (var connection = new SqlConnection(dbSet.ConnectionString))
             {
-                string sqlQuery = $"DELETE [{dbset.TableName}] WHERE [stream_id] = '{entity.stream_id}'";
+                string sqlQuery = $"DELETE [{dbSet.TableName}] WHERE [stream_id] = '{entity.stream_id}'";
                 await connection.OpenAsync();
 
                 using (var command = new SqlCommand(sqlQuery, connection))
