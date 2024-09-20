@@ -15,22 +15,22 @@ In today's digital world, effective file management is crucial for individuals a
    - .NET CLI
 
         ``` sh
-        dotnet add package Sam.FileTableFramework --version 2.0.0
+        dotnet add package Sam.FileTableFramework --version 2.1.0
         ```
    - Package Manager
 
         ``` sh
-        NuGet\Install-Package Sam.FileTableFramework -Version 2.0.0
+        NuGet\Install-Package Sam.FileTableFramework -Version 2.1.0
         ```
 
    - Package Reference
         ``` xml
-        <PackageReference Include="Sam.FileTableFramework" Version="2.0.0" />
+        <PackageReference Include="Sam.FileTableFramework" Version="2.1.0" />
         ```
     
     - Paket CLI
         ``` sh
-        paket add Sam.FileTableFramework --version 2.0.0
+        paket add Sam.FileTableFramework --version 2.1.0
         ```
 
 3. Create your DbContext by inheriting from FileTableDbContext. Then, define a FtDbSet property for your tables.
